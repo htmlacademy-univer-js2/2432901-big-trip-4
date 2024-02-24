@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Паластрова Станислава](https://up.htmlacademy.ru/univer-js2/4/user/2432901).
-* Наставник: [Глеб Клецков](https://htmlacademy.ru/profile/id1487865).
+* Наставник: [Клецков Глеб](https://htmlacademy.ru/profile/id1487865).
 
 ---
 
