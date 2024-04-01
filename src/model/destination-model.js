@@ -2,27 +2,27 @@ import {getRandomDestination} from '../mock/destination.js';
 import {CITIES_COUNT} from '../const.js';
 
 export default class DestinationModel {
-  towns = Array.from({length: CITIES_COUNT}, getRandomDestination);
+  #cities = Array.from({length: CITIES_COUNT}, getRandomDestination);
 
-  getTowns() {
-    return this.towns;
+  getCities() {
+    return this.#cities;
   }
 
-  getTownNameById(townArr, id) {
+  getCityNameById(cityArr, id) {
     let temp = '';
-    townArr.forEach((town) => {
-      if (town.id === id) {
-        temp = town.name;
+    cityArr.forEach((city) => {
+      if (city.id === id) {
+        temp = city.name;
       }
     });
     return temp;
   }
 
-  getTownDescByID(townArr, id) {
+  getCityDescriptionByID(cityArr, id) {
     let temp = '';
-    townArr.forEach((town) => {
-      if (town.id === id) {
-        temp = town.description;
+    cityArr.forEach((city) => {
+      if (city.id === id) {
+        temp = city.description;
       }
     });
     return temp;

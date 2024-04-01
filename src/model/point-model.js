@@ -6,7 +6,7 @@ import OfferModel from '../model/offer-model.js';
 
 export default class PointModel {
   destinationModel = new DestinationModel();
-  towns = this.destinationModel.getTowns();
+  cities = this.destinationModel.getCities();
 
   points = Array.from({length: POINTS_COUNT}, () => {
     const offerModel = new OfferModel(getRandomValue(0, OFFERS_COUNT));
@@ -17,12 +17,12 @@ export default class PointModel {
       offers.push(offerModel.getOfferByID(offersArr, offerID));
     });
 
-    const townID = getRandomArrayElement(this.towns).id;
+    const cityID = getRandomArrayElement(this.cities).id;
 
-    const point = (getRandomPoint(townID, offersID));
-    point.destination = this.destinationModel.getTownNameById(this.towns, townID);
+    const point = (getRandomPoint(cityID, offersID));
+    point.destination = this.destinationModel.getCityNameById(this.cities, cityID);
     point.offers = offers;
-    point.description = this.destinationModel.getTownDescByID(this.towns, townID);
+    point.description = this.destinationModel.getCityDescriptionByID(this.cities, cityID);
     return point;
   });
 
