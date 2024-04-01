@@ -13,7 +13,7 @@ export default class TripPresenter {
   #container = null;
   #pointModel = null;
   #formComponent = null;
-  #boardPoint = [];
+  #tripPoint = [];
 
   constructor ({container, pointModel}) {
     this.#container = container;
@@ -21,13 +21,13 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#boardPoint = [...this.#pointModel.getPoints()];
+    this.#tripPoint = [...this.#pointModel.getPoints()];
 
     render(this.#sortFormView, this.#container);
     render(this.#pointsListView, this.#container);
 
-    for (let i = 0; i < this.#boardPoint.length; i++) {
-      this.#renderPoint(this.#boardPoint[i]);
+    for (let i = 0; i < this.#tripPoint.length; i++) {
+      this.#renderPoint(this.#tripPoint[i]);
     }
   }
 
