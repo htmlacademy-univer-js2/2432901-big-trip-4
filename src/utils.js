@@ -55,4 +55,8 @@ function getDate({next}) {
   return date;
 }
 
-export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue };
+function updateItem (items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem };
