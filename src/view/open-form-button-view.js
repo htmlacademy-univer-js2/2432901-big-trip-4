@@ -1,10 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-
-function createOpenFormBtn() {
-  return `<button class="event__rollup-btn" type="button">
-  <span class="visually-hidden">Open event</span>
-  </button>`;
-}
+import { createOpenFormBtn } from '../templates/open-form-button-template';
 
 export default class OpenFormBtnView extends AbstractView{
   #handleClick = null;
