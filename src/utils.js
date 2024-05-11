@@ -59,4 +59,13 @@ function updateItem (items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem };
+const sortByTime = (pointA, pointB) => {
+  const durationA = pointA.dateTo - pointA.dateFrom;
+  const durationB = pointB.dateTo - pointB.dateFrom;
+
+  return durationA - durationB;
+};
+
+const sortByPrice = (pointA, pointB) => pointA.basePrice - pointB.basePrice;
+
+export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem, sortByTime, sortByPrice };

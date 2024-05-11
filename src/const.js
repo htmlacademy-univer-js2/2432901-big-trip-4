@@ -44,15 +44,23 @@ const FilterType = {
   PAST: 'past'
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
+};
+
 const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
 
 for (let i = 0; i < IMAGE_COUNT; i++) {
   IMAGES.push(`${IMAGE_URL}${getRandomValue()}`);
 }
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
-};
-
-export { POINTS_COUNT, CITIES_COUNT, OFFERS_COUNT, IMAGE_COUNT, POINTS_TYPE, DESTINATIONS, OFFERS, DESCRIPTION, IMAGE_URL, IMAGES, FilterType, Mode };
+export { POINTS_COUNT, CITIES_COUNT, OFFERS_COUNT, IMAGE_COUNT, POINTS_TYPE, DESTINATIONS, OFFERS, DESCRIPTION, IMAGE_URL, IMAGES, FilterType, Mode, SortType };
