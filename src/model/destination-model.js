@@ -1,16 +1,15 @@
-import {getRandomDestination} from '../mock/destination.js';
-import {CITIES_COUNT} from '../const.js';
+import {getCitiesArray} from '../mock/destination.js';
 
 export default class DestinationModel {
-  #cities = Array.from({length: CITIES_COUNT}, getRandomDestination);
+  #cities = getCitiesArray();
 
   getCities() {
     return this.#cities;
   }
 
-  getCityNameById(cityArr, id) {
+  getCityNameById(id) {
     let temp = '';
-    cityArr.forEach((city) => {
+    this.#cities.forEach((city) => {
       if (city.id === id) {
         temp = city.name;
       }
@@ -18,11 +17,31 @@ export default class DestinationModel {
     return temp;
   }
 
-  getCityDescriptionByID(cityArr, id) {
+  getCityDescriptionByID(id) {
     let temp = '';
-    cityArr.forEach((city) => {
+    this.#cities.forEach((city) => {
       if (city.id === id) {
         temp = city.description;
+      }
+    });
+    return temp;
+  }
+
+  getImagesByID(id) {
+    let temp = '';
+    this.#cities.forEach((city) => {
+      if (city.id === id) {
+        temp = city.images;
+      }
+    });
+    return temp;
+  }
+
+  getIDByCityName(cityName) {
+    let temp = '';
+    this.#cities.forEach((city) => {
+      if (city.name === cityName) {
+        temp = city.id;
       }
     });
     return temp;
