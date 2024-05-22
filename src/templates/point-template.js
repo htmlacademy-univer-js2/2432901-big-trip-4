@@ -1,6 +1,7 @@
 import {getDateDiff, getMonthAndDay, getTime} from '../utils.js';
 
 function createPointTemplate (point) {
+  const offersArr = point.offers;
   return `<div class="event">
     <time class="event__date" datetime=${point.dateFrom}>${getMonthAndDay(point.dateFrom)}</time>
     <div class="event__type">
@@ -20,7 +21,7 @@ function createPointTemplate (point) {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      ${point.offers.map((offer) => `<li class="event__offer">
+      ${offersArr.map((offer) => `<li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
