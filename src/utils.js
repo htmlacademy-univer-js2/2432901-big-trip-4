@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { IMAGE_COUNT } from './const';
 
 const TimePeriods = {
   MINS_IN_HOUR: 60,
@@ -68,4 +69,12 @@ const sortByTime = (pointA, pointB) => {
 
 const sortByPrice = (pointA, pointB) => pointA.basePrice - pointB.basePrice;
 
-export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem, sortByTime, sortByPrice };
+function getRandomImages () {
+  const images = [];
+  for (let i = 0; i < IMAGE_COUNT; i++){
+    images.push(`https://loremflickr.com/248/152?random=${getRandomValue()}`);
+  }
+  return images;
+}
+
+export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem, sortByTime, sortByPrice, getRandomImages };

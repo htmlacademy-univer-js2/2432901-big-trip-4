@@ -1,13 +1,18 @@
-import {getRandomArrayElement, getRandomValue} from '../utils.js';
+import {getRandomArrayElement, getRandomValue, getRandomImages} from '../utils.js';
 import {DESTINATIONS, DESCRIPTION} from '../const.js';
 
-function getRandomDestination() {
-  return ({
-    'id': crypto.randomUUID(),
-    'name': getRandomArrayElement(DESTINATIONS),
-    'photo': `https://loremflickr.com/248/152?random=${getRandomValue()}`,
-    'description': getRandomArrayElement(DESCRIPTION.split('.')).repeat(getRandomValue(1, 5))
+function getCitiesArray() {
+  const cities = [];
+  DESTINATIONS.forEach((city) => {
+    cities.push({
+      'id': crypto.randomUUID(),
+      'name': city,
+      'images': getRandomImages(),
+      'description': getRandomArrayElement(DESCRIPTION.split('.')).repeat(getRandomValue(1, 5))
+    });
   });
+  return cities;
 }
 
-export {getRandomDestination};
+
+export {getCitiesArray};
