@@ -2,7 +2,7 @@ import {POINTS_TYPE, DESTINATIONS} from '../const.js';
 import { getFullDate } from '../utils.js';
 
 function createPointEditTemplate (pointForm) {
-  const offersArr = pointForm.offers ?? [];
+  const offersArr = pointForm.offers !== undefined ? pointForm.offers : [];
   const imagesArr = pointForm.images;
 
   return `<li class="trip-events__item">
