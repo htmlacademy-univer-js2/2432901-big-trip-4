@@ -44,7 +44,16 @@ export default class TripPresenter {
     Object.values(SortType).forEach((elem) => {
       this.#renderSort(elem);
     });
-
+    const daySort = this.#sortView.element.querySelector('.trip-sort__item--day');
+    const priceSort = this.#sortView.element.querySelector('.trip-sort__item--price');
+    render(new SortItemView({
+      sort: 'event',
+      onSortTypeChange: this.#handleSortTypeChange
+    }), daySort, RenderPosition.AFTEREND);
+    render(new SortItemView({
+      sort: 'offer',
+      onSortTypeChange: this.#handleSortTypeChange
+    }), priceSort, RenderPosition.AFTEREND);
     filters.forEach((filter) => {
       render(new FilterItemView(filter), this.#filterFormView.element);
     });
