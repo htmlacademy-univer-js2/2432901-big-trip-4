@@ -1,17 +1,17 @@
-import {getRandomArrayElement, getRandomValue, getDate} from '../utils.js';
-import { POINTS_TYPE } from '../const.js';
+import { Price } from '../const';
+import { getDate, getRandomInteger, getRandomValue } from '../utils';
 
-function getRandomPoint(destinationID) {
-  return ({
-    'id': crypto.randomUUID(),
-    'basePrice': getRandomValue(),
-    'dateFrom': getDate({next: false}),
-    'dateTo': getDate({next: true}),
-    'destination': destinationID,
-    'isFavorite': getRandomArrayElement([0, 1]),
-    'offers': 'not assigned',
-    'type': getRandomArrayElement(POINTS_TYPE)
-  });
+function generatePoint(destinations, offers) {
+  return {
+    id: crypto.randomUUID(),
+    basePrice: getRandomInteger(Price.MIN, Price.MAX),
+    dateFrom: getDate({ next: false }),
+    dateTo: getDate({ next: true }),
+    destination: getRandomValue(destinations),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    offers: offers,
+    type: offers.type
+  };
 }
 
-export {getRandomPoint};
+export { generatePoint };
