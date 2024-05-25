@@ -1,9 +1,21 @@
-const POINTS_COUNT = 5;
-const CITIES_COUNT = 5;
-const OFFERS_COUNT = 5;
-const IMAGE_COUNT = 5;
+import { isPointPast, isPointPresent, isPointFuture, sortByDay, sortByEvent, sortByOffers, sortByPrice, sortByTime } from './utils';
 
-const DESTINATIONS = [
+export const DESTINATION_COUNT = 5;
+export const POINT_COUNT = 5;
+export const OFFER_COUNT = 5;
+
+export const Price = {
+  MIN: 1,
+  MAX: 1000
+};
+
+export const Duration = {
+  HOUR: 5,
+  DAY: 5,
+  MINUTE: 59
+};
+
+export const DESTINATIONS = [
   'Amsterdam',
   'Chamonix',
   'Chicago',
@@ -12,7 +24,7 @@ const DESTINATIONS = [
   'Perm'
 ];
 
-const POINTS_TYPE = [
+export const POINTS_TYPES = [
   'taxi',
   'bus',
   'train',
@@ -24,35 +36,86 @@ const POINTS_TYPE = [
   'restaurant'
 ];
 
-const OFFERS = {
-  'taxi': ['Switch to comfort class', 'Switch to business class', 'Add luggage'],
-  'bus': ['Add luggage'],
-  'train': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'ship': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'drive': [],
-  'flight': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'check-in': [],
-  'sightseeing': ['Travel by train', 'Add meal'],
-  'restaurant': []
-};
-const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
+export const OFFERS = [
+  'Order Uber',
+  'Add luggage',
+  'Rent a car',
+  'Add meal',
+  'Switch to comfort class',
+  'Switch to a business class'
+];
 
-const FilterType = {
+export const DEFAULT_TYPE = 'flight';
+
+export const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.';
+
+export const EmptyPoint = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: DEFAULT_TYPE
+};
+
+export const FilterTypes = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past'
 };
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
+export const FilterOptions = {
+  [FilterTypes.EVERYTHING]: (points) => [...points],
+  [FilterTypes.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
+  [FilterTypes.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterTypes.PAST]: (points) => points.filter((point) => isPointPast(point))
 };
 
-const SortType = {
+export const SortTypes = {
   DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
+  OFFERS: 'offers'
 };
 
-export { POINTS_COUNT, CITIES_COUNT, OFFERS_COUNT, IMAGE_COUNT, POINTS_TYPE, DESTINATIONS, OFFERS, DESCRIPTION, FilterType, Mode, SortType };
+export const SortingOptions = {
+  [SortTypes.DAY]: (points) => [...points].sort(sortByDay),
+  [SortTypes.EVENT]: (points) => [...points].sort(sortByEvent),
+  [SortTypes.TIME]: (points) => [...points].sort(sortByTime),
+  [SortTypes.PRICE]: (points) => [...points].sort(sortByPrice),
+  [SortTypes.OFFERS]: (points) => [...points].sort(sortByOffers)
+};
+
+export const ACTIVE_SORT_TYPES = [
+  SortTypes.DAY,
+  SortTypes.TIME,
+  SortTypes.PRICE
+];
+
+export const PointMode = {
+  DEFAULT: 'default',
+  EDIT: 'edit'
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};
+
+export const EditingType = {
+  UPDATE_POINT: 'update-point',
+  ADD_POINT: 'add-point',
+  DELETE_POINT: 'delete-point'
+};
+
+export const EmptyListText = {
+  [FilterTypes.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterTypes.FUTURE]: 'There are no future events',
+  [FilterTypes.PRESENT]: 'There are no present events',
+  [FilterTypes.PAST]: 'There are no past events'
+};
+

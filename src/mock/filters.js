@@ -1,12 +1,11 @@
-import { filter } from '../filter.js';
+import { FilterOptions, FilterTypes } from '../const';
 
-function generateFilter(points) {
-  return Object.entries(filter).map(
-    ([filterType, filterPoints]) => ({
-      type: filterType,
-      exists: points.some(filterPoints)
-    })
-  );
+function generateFilters(points) {
+  return Object.entries(FilterOptions).map(([filterType, filterPoints]) => ({
+    type: filterType,
+    hasPoints: filterPoints(points).length > 0,
+    defaultFilterType: filterType === FilterTypes.EVERYTHING
+  }));
 }
 
-export { generateFilter };
+export { generateFilters };

@@ -1,8 +1,29 @@
-import { createFilterFormTemplate } from '../templates/filter-template.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { createFilterTemplate } from '../templates/filter-template.js';
+export default class FilterView extends AbstractView {
+  #activeFilters = [];
+  #selectedFilter = null;
+  #onFilterTypeChange = null;
 
-export default class FilterFormView extends AbstractView{
+  #filterTypeChangeHandler = (event) => {
+    event.preventDefault();
+    this.#onFilterTypeChange?.(event.target.dataset.filterType);
+  };
+
+  constructor({activeFilters, selectedFilter, onFilterTypeChange}) {
+    super();
+    this.#activeFilters = activeFilters;
+    this.#selectedFilter = selectedFilter;
+
+    this.#onFilterTypeChange = onFilterTypeChange;
+
+    this.element.addEventListener('change', this.#filterTypeChangeHandler);
+  }
+
   get template() {
-    return createFilterFormTemplate();
+    return createFilterTemplate({
+      activeFilters: this.#activeFilters,
+      selectedFilter: this.#selectedFilter
+    });
   }
 }
