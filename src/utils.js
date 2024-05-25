@@ -1,80 +1,122 @@
+import { Duration } from './const';
 import dayjs from 'dayjs';
-import { IMAGE_COUNT } from './const';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 const TimePeriods = {
-  MINS_IN_HOUR: 60,
-  HOURS_IN_DAY : 24,
-  MINS_IN_DAY : 60 * 24,
-  DAY_IN_MONTH : 31
+  MSEC_IN_SEC : 1000,
+  SEC_IN_MIN : 60,
+  MIN_IN_HOUR : 60,
+  HOUR_IN_DAY : 24,
+  MSEC_IN_HOUR : 60 * 60 * 1000,
+  MSEC_IN_DAY : 24 * 60 * 60 * 1000,
 };
 
-function getDateDiff(dateFrom, dateTo) {
-  const diff = dayjs(dateTo).diff(dayjs(dateFrom), 'm');
+function getRandomInteger(a = 0, b = 1) {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
 
-  if (Math.ceil(diff / TimePeriods.MINS_IN_DAY) > 1){
-    return `${Math.ceil(diff / TimePeriods.MINS_IN_DAY)} D`;
-  }
-
-  if (Math.ceil(diff / TimePeriods.MINS_IN_HOUR) > 1){
-    return `${Math.ceil(diff / TimePeriods.MINS_IN_HOUR)} H`;
-  }
-  return `${Math.ceil(diff)} M`;
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
 }
 
-function getTime(date) {
-  return dayjs(date).format('hh:mm');
+function getRandomValue(items) {
+  return items[getRandomInteger(0, items.length - 1)];
 }
 
-function getMonthAndDay(date) {
+function formatStringToDateTime(date) {
+  return dayjs(date).format('YY/MM/DD HH:mm');
+}
+
+function formatStringToShortDate(date) {
   return dayjs(date).format('MMM DD');
 }
 
-function getFullDate(date) {
-  return dayjs(date).format('DD/MM/YY hh:mm');
+function formatStringToTime(date) {
+  return dayjs(date).format('HH:mm');
 }
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
+function getPointDuration(point) {
+  const timeDiff = dayjs(point.dateTo).diff(dayjs(point.dateFrom));
+
+  let pointDuration = 0;
+
+  switch (true) {
+    case (timeDiff >= TimePeriods.MSEC_IN_DAY):
+      pointDuration = dayjs.duration(timeDiff).format('DD[D] HH[H] mm[M]');
+      break;
+    case (timeDiff >= TimePeriods.MSEC_IN_HOUR):
+      pointDuration = dayjs.duration(timeDiff).format('HH[H] mm[M]');
+      break;
+    case (timeDiff < TimePeriods.MSEC_IN_HOUR):
+      pointDuration = dayjs.duration(timeDiff).format('mm[M]');
+      break;
+  }
+
+  return pointDuration;
 }
 
-function getRandomValue(lower = 0, upper = 1000) {
-  return Math.round((upper - lower) * Math.random() + lower);
-}
-
-function getDate({next}) {
-  let date = dayjs().subtract(getRandomValue(0, TimePeriods.DAY_IN_MONTH), 'day').toDate();
-  const minsGap = getRandomValue(0, TimePeriods.MINS_IN_HOUR);
-  const hoursGap = getRandomValue(0, TimePeriods.HOURS_IN_DAY);
+function getDate({ next }) {
+  const minsGap = getRandomInteger(0, Duration.MINUTE);
+  const hoursGap = getRandomInteger(1, Duration.HOUR);
+  const daysGap = getRandomInteger(0, Duration.DAY);
+  let date = dayjs().subtract(getRandomInteger(0, Duration.DAY), 'day').toDate();
 
   if (next) {
-    date = dayjs(date)
-      .add(minsGap, 'minute')
-      .add(hoursGap, 'hour')
-      .toDate();
+    date = dayjs(date).add(minsGap, 'minute').add(hoursGap, 'hour').add(daysGap, 'day').toDate();
   }
 
   return date;
 }
 
-function updateItem (items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
+
+function getFullDate(date) {
+  return dayjs(date).format('DD/MM/YY hh:mm');
 }
 
-const sortByTime = (pointA, pointB) => {
+function isPointPast(point) {
+  return dayjs().isAfter(point.dateTo);
+}
+
+function isPointPresent(point) {
+  return dayjs().isBefore(point.dateTo) && dayjs().isAfter(point.dateFrom);
+}
+
+function isPointFuture(point) {
+  return dayjs().isBefore(point.dateFrom);
+}
+
+function updatePoint(points, update) {
+  return points.map((point) => point.id === update.id ? update : point);
+}
+
+function sortByDay(pointA, pointB) {
+  return new Date(pointA.dateFrom) - new Date(pointB.dateFrom);
+}
+
+function sortByEvent(pointA, pointB) {
+  return (pointA.type.toLowerCase()).localeCompare(pointB.type.toLowerCase());
+}
+
+function sortByTime(pointA, pointB) {
   const durationA = pointA.dateTo - pointA.dateFrom;
   const durationB = pointB.dateTo - pointB.dateFrom;
 
-  return durationA - durationB;
-};
-
-const sortByPrice = (pointA, pointB) => pointA.basePrice - pointB.basePrice;
-
-function getRandomImages () {
-  const images = [];
-  for (let i = 0; i < IMAGE_COUNT; i++){
-    images.push(`https://loremflickr.com/248/152?random=${getRandomValue()}`);
-  }
-  return images;
+  return durationB - durationA;
 }
 
-export { getDateDiff, getTime, getMonthAndDay, getFullDate, getRandomArrayElement, getDate, getRandomValue, updateItem, sortByTime, sortByPrice, getRandomImages };
+function sortByPrice(pointA, pointB) {
+  return pointB.basePrice - pointA.basePrice;
+}
+
+function sortByOffers(pointA, pointB) {
+  return pointA.offers.length - pointB.offers.length;
+}
+
+function isBigDifference(pointA, pointB) {
+  return pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || sortByTime(pointA, pointB) !== 0;
+}
+
+export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate};
