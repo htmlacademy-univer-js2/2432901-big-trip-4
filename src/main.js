@@ -1,6 +1,6 @@
 import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
-import PointsApiService from './service/api-service.js';
+import PointsApiService from './service/points-api-service.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
 import { RenderPosition, render } from './framework/render.js';
@@ -14,7 +14,7 @@ const filterElement = tripInfoElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main');
 const eventListElement = mainElement.querySelector('.trip-events');
 
-const AUTHORIZATION = 'Basic ahsjdhi838hekhu';
+const AUTHORIZATION = 'Basic anjcdbh57ybf8u';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const apiService = new PointsApiService(END_POINT, AUTHORIZATION);

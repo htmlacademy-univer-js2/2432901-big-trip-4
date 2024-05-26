@@ -1,4 +1,5 @@
 import { UpdateType, EditingType } from '../const';
+import { isEscapeButton } from '../utils';
 import { RenderPosition, remove, render } from '../framework/render';
 import PointEditView from '../view/point-edit-view';
 
@@ -28,6 +29,7 @@ export default class NewPointPresenter {
       isCreating: true,
       onRollUpPointClick: this.#cancelClickHandler,
       onSubmitForm: this.#formSubmitHandler,
+      onCancelFormClick: this.#cancelClickHandler
     });
     render(this.#pointEditComponent, this.#container.element, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -44,13 +46,30 @@ export default class NewPointPresenter {
     this.#onDestroy();
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isActive: false,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isActive: true,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #formSubmitHandler = (point) => {
     this.#onDataChange(
       EditingType.ADD_POINT,
       UpdateType.MINOR,
-      {id: crypto.randomUUID(), ...point}
+      point
     );
-    this.destroy();
   };
 
   #cancelClickHandler = () => {
@@ -58,7 +77,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (event) => {
-    if (event.key === 'Escape') {
+    if (isEscapeButton(event)) {
       event.preventDefault();
       this.destroy();
     }
