@@ -1,6 +1,6 @@
 import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
-import MockService from './service/mock-service.js';
+import PointsApiService from './service/api-service.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
 import { RenderPosition, render } from './framework/render.js';
@@ -14,10 +14,13 @@ const filterElement = tripInfoElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main');
 const eventListElement = mainElement.querySelector('.trip-events');
 
-const mockService = new MockService();
-const offersModel = new OffersModel(mockService);
-const pointsModel = new PointsModel(mockService);
-const destinationsModel = new DestinationsModel(mockService);
+const AUTHORIZATION = 'Basic ahsjdhi838hekhu';
+const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
+
+const apiService = new PointsApiService(END_POINT, AUTHORIZATION);
+const offersModel = new OffersModel(apiService);
+const destinationsModel = new DestinationsModel(apiService);
+const pointsModel = new PointsModel({apiService, destinationsModel, offersModel});
 const filtersModel = new FiltersModel();
 
 const tripPresenter = new TripPresenter({
@@ -49,3 +52,4 @@ render(newPointComponent, tripInfoElement, RenderPosition.BEFOREEND);
 
 tripPresenter.init();
 filterPresenter.init();
+pointsModel.init();
