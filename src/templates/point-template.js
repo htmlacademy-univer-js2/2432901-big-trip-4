@@ -4,7 +4,7 @@ import he from 'he';
 function createPointOffersTemplate(offers, checkedOffers) {
   return (
     `<ul class="event__selected-offers">
-        ${offers.offers.map((offerItem) => checkedOffers.offers.map((id) => id.id).includes(offerItem.id) ? `<li class="event__offer">
+    ${offers.offers.map((offerItem) => checkedOffers.includes(offerItem.id) ? `<li class="event__offer">
           <span class="event__offer-title">${offerItem.title}</span>
             &plus;&euro;&nbsp;
           <span class="event__offer-price">${offerItem.price}</span>
@@ -14,8 +14,8 @@ function createPointOffersTemplate(offers, checkedOffers) {
 }
 
 export function createPointTemplate(point, destinations, pointOffers) {
-  const { basePrice, dateFrom, dateTo, isFavorite, offers, type } = point;
-  const currentDestination = destinations.find((destination) => destination.id === point.destination.id);
+  const { price, dateFrom, dateTo, isFavorite, offers, type } = point;
+  const currentDestination = destinations.find((destination) => destination.id === point.destination);
   const destinationName = (currentDestination) ? currentDestination.name : '';
 
   const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
@@ -35,7 +35,7 @@ export function createPointTemplate(point, destinations, pointOffers) {
       <p class="event__duration">${getPointDuration(point)}</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${he.encode(basePrice.toString())}</span>
+    &euro;&nbsp;<span class="event__price-value">${price}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
 

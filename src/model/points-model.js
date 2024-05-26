@@ -1,6 +1,6 @@
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
-import { adaptToClient, updatePoint } from '../utils';
+import { adaptToClient, adaptToServer, updatePoint } from '../utils';
 
 export default class PointsModel extends Observable {
   #apiService = null;
@@ -27,21 +27,29 @@ export default class PointsModel extends Observable {
       ]);
       const points = await this.#apiService.points;
       this.#points = points.map(adaptToClient);
-      this._notify(UpdateType.INIT, {isError: false});
+      this._notify(UpdateType.INIT, {});
     } catch (err) {
       this.#points = [];
       this._notify(UpdateType.INIT, {isError: true});
     }
   }
 
-  add(updateType, point) {
-    this.#points.push(point);
-    this._notify(updateType, point);
+  async add(updateType, point) {
+    try {
+      const adaptedPointToServer = adaptToServer(point);
+      const response = await this.#apiService.addPoint(adaptedPointToServer);
+      const newPoint = adaptToClient(response);
+      this.#points.push(newPoint);
+      this._notify(updateType, newPoint);
+    } catch (err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
   async update(updateType, point) {
     try {
-      const response = await this.#apiService.updatePoint(point);
+      const adaptedPointToServer = adaptToServer(point);
+      const response = await this.#apiService.updatePoint(adaptedPointToServer);
       const updatedPoint = adaptToClient(response);
       this.#points = updatePoint(this.#points, updatedPoint);
       this._notify(updateType, updatedPoint);
@@ -50,9 +58,14 @@ export default class PointsModel extends Observable {
     }
   }
 
-  remove(updateType, point) {
-    const index = this.#points.findIndex((item) => item.id === point.id);
-    this.#points.splice(index, 1);
-    this._notify(updateType, point);
+  async remove(updateType, point) {
+    try {
+      const adaptedPointToServer = adaptToServer(point);
+      await this.#apiService.deletePoint(adaptedPointToServer);
+      this.#points = this.#points.filter((item) => item.id !== point.id);
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t delete point');
+    }
   }
 }

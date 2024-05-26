@@ -26,6 +26,10 @@ function getRandomValue(items) {
   return items[getRandomInteger(0, items.length - 1)];
 }
 
+function isEscapeButton (evt) {
+  return evt.key === 'Escape';
+}
+
 function formatStringToDateTime(date) {
   return dayjs(date).format('YY/MM/DD HH:mm');
 }
@@ -108,7 +112,7 @@ function sortByTime(pointA, pointB) {
 }
 
 function sortByPrice(pointA, pointB) {
-  return pointB.basePrice - pointA.basePrice;
+  return pointB.price - pointA.price;
 }
 
 function sortByOffers(pointA, pointB) {
@@ -138,9 +142,9 @@ function adaptToClient(point) {
 function adaptToServer(point) {
   const adaptedPoint = {
     ...point,
-    ['base_price']: point.price,
-    ['date_from']: point.date_from instanceof Date ? point.dateFrom.toISOString() : null,
-    ['date_to']: point.date_to instanceof Date ? point.dateTo.toISOString() : null,
+    ['base_price']: Number(point.price),
+    ['date_from']: point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
+    ['date_to']: point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
     ['is_favorite']: point.isFavorite
   };
 
@@ -151,4 +155,4 @@ function adaptToServer(point) {
   return adaptedPoint;
 }
 
-export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer};
+export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton};

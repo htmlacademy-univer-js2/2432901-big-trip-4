@@ -52,12 +52,24 @@ export default class PointEditView extends AbstractStatefulView {
 
   #cancelClickHandler = (event) => {
     event.preventDefault();
-    this.#onCancelFormClick(this._state);
+    this.#onCancelFormClick(PointEditView.parseStateToPoint(this._state.point));
   };
 
-  static parsePointToState = ({point}) => ({ point });
+  static parsePointToState(point) {
+    return { ...point,
+      isActive: true,
+      isSaving: false,
+      isDeleting: false
+    };
+  }
 
-  static parseStateToPoint = (state) => state.point;
+  static parseStateToPoint(state) {
+    const point = {...state};
+    delete point.isActive;
+    delete point.isSaving;
+    delete point.isDeleting;
+    return point;
+  }
 
   reset = (point) => this.updateElement({point});
 
@@ -71,11 +83,11 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#changePriceHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#changeOffersHandler);
-
     this.#setDatepicker();
   }
 
   #changeTypeHandler = (event) => {
+    event.preventDefault();
     this.updateElement({
       point: {
         ...this._state.point,
@@ -90,7 +102,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.updateElement({
       point: {
         ...this._state.point,
-        destination: currentDestination
+        destination: currentDestination.id
       }
     });
   };
@@ -99,7 +111,7 @@ export default class PointEditView extends AbstractStatefulView {
     this._setState({
       point: {
         ...this._state.point,
-        basePrice: event.target.valueAsNumber
+        price: event.target.valueAsNumber
       }
     });
   };
@@ -107,8 +119,10 @@ export default class PointEditView extends AbstractStatefulView {
   #changeOffersHandler = () => {
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
     this._setState({
-      ...this._state,
-      offers: checkedOffers.map((offer) => offer.id)
+      point: {
+        ...this._state.point,
+        offers: checkedOffers.map((offer) => offer.id)
+      }
     });
   };
 
@@ -122,7 +136,6 @@ export default class PointEditView extends AbstractStatefulView {
       },
       'time_24hr': true
     };
-
     this.#datepickerFrom = flatpickr(
       dateFromElement,
       {
@@ -132,7 +145,6 @@ export default class PointEditView extends AbstractStatefulView {
         onClose: this.#closeDateFromHandler
       }
     );
-
     this.#datepickerTo = flatpickr(
       deteToElement,
       {
@@ -170,7 +182,6 @@ export default class PointEditView extends AbstractStatefulView {
       this.#datepickerFrom.destroy();
       this.#datepickerFrom = null;
     }
-
     if (this.#datepickerTo) {
       this.#datepickerTo.destroy();
       this.#datepickerTo = null;
