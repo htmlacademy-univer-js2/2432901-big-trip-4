@@ -50,7 +50,7 @@ export const DEFAULT_TYPE = 'flight';
 export const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.';
 
 export const EmptyPoint = {
-  basePrice: 0,
+  price: 0,
   dateFrom: null,
   dateTo: null,
   destination: null,
@@ -120,3 +120,15 @@ export const EmptyListText = {
   [FilterTypes.PAST]: 'There are no past events'
 };
 
+export const ButtonText = {
+  SAVE: 'Save',
+  DELETE: 'Delete',
+  CANCEL: 'Cancel',
+  LOAD_SAVE: 'Saving...',
+  LOAD_DELETE: 'Deleting...'
+};
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
