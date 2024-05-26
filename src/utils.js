@@ -119,4 +119,36 @@ function isBigDifference(pointA, pointB) {
   return pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || sortByTime(pointA, pointB) !== 0;
 }
 
-export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate};
+function adaptToClient(point) {
+  const adaptedPoint = {
+    ...point,
+    price: point['base_price'],
+    dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+    dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+    isFavorite: point['is_favorite']
+  };
+
+  delete adaptedPoint['base_price'];
+  delete adaptedPoint['date_from'];
+  delete adaptedPoint['date_to'];
+  delete adaptedPoint['is_favorite'];
+  return adaptedPoint;
+}
+
+function adaptToServer(point) {
+  const adaptedPoint = {
+    ...point,
+    ['base_price']: point.price,
+    ['date_from']: point.date_from instanceof Date ? point.dateFrom.toISOString() : null,
+    ['date_to']: point.date_to instanceof Date ? point.dateTo.toISOString() : null,
+    ['is_favorite']: point.isFavorite
+  };
+
+  delete adaptedPoint.price;
+  delete adaptedPoint.dateFrom;
+  delete adaptedPoint.dateTo;
+  delete adaptedPoint.isFavorite;
+  return adaptedPoint;
+}
+
+export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer};
