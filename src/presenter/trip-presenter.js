@@ -27,6 +27,9 @@ export default class TripPresenter {
   #currentSortType = SortTypes.DAY;
   #filterType = FilterTypes.EVERYTHING;
 
+  #isLoading = true;
+  #isLoadingError = false;
+
   constructor({container, offersModel, pointsModel, destinationsModel, filtersModel, onNewPointDestroy}) {
     this.#container = container;
     this.#offersModel = offersModel;
@@ -70,6 +73,16 @@ export default class TripPresenter {
   }
 
   #renderTrip() {
+    if (this.#isLoading) {
+      this.#renderEmptyListView({isLoading: true});
+      return;
+    }
+
+    if (this.#isLoadingError) {
+      this.#renderEmptyListView({isLoadingError: true});
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderEmptyListView();
       return;
@@ -117,9 +130,11 @@ export default class TripPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   };
 
-  #renderEmptyListView = () => {
+  #renderEmptyListView = ({isLoading = false, isLoadingError = false} = {}) => {
     this.#emptyListComponent = new EmptyPointListView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
+      isLoading,
+      isLoadingError
     });
 
     render(this.#emptyListComponent, this.#container, RenderPosition.AFTERBEGIN);
@@ -191,6 +206,12 @@ export default class TripPresenter {
         this.#renderTrip();
         break;
       case UpdateType.MINOR:
+        this.#clearTrip();
+        this.#renderTrip();
+        break;
+      case UpdateType.INIT:
+        this.#isLoadingError = data.isError;
+        this.#isLoading = false;
         this.#clearTrip();
         this.#renderTrip();
         break;

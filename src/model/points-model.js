@@ -1,17 +1,37 @@
+import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import { adaptToClient, updatePoint } from '../utils';
 
 export default class PointsModel extends Observable {
-  #service = null;
-  #points = null;
+  #apiService = null;
+  #points = [];
+  #destinationsModel = null;
+  #offersModel = null;
 
-  constructor(service) {
+  constructor({apiService, destinationsModel, offersModel}) {
     super();
-    this.#service = service;
-    this.#points = this.#service.points;
+    this.#apiService = apiService;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   get points() {
     return this.#points;
+  }
+
+  async init() {
+    try {
+      await Promise.all([
+        this.#destinationsModel.init(),
+        this.#offersModel.init()
+      ]);
+      const points = await this.#apiService.points;
+      this.#points = points.map(adaptToClient);
+      this._notify(UpdateType.INIT, {isError: false});
+    } catch (err) {
+      this.#points = [];
+      this._notify(UpdateType.INIT, {isError: true});
+    }
   }
 
   add(updateType, point) {
@@ -19,11 +39,15 @@ export default class PointsModel extends Observable {
     this._notify(updateType, point);
   }
 
-  update(updateType, point) {
-    const updatePoint = this.#points.findIndex((item) => item.id === point.id ? point : item);
-
-    this.#points[updatePoint] = point;
-    this._notify(updateType, point);
+  async update(updateType, point) {
+    try {
+      const response = await this.#apiService.updatePoint(point);
+      const updatedPoint = adaptToClient(response);
+      this.#points = updatePoint(this.#points, updatedPoint);
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update point');
+    }
   }
 
   remove(updateType, point) {

@@ -1,10 +1,26 @@
 import AbstractView from '../framework/view/abstract-view';
-import { createEmptyPointsListTemplate } from '../templates/empty-point-list-template';
+import { createEmptyPointListTemplate } from '../templates/empty-point-list-template';
 
 
 export default class EmptyPointListView extends AbstractView{
+  #filterType = null;
+  #isLoading = false;
+  #isLoadingError = false;
+
+  constructor({filterType, isLoading = false, isLoadingError = false}) {
+    super();
+    this.#filterType = filterType;
+    this.#isLoading = isLoading;
+    this.#isLoadingError = isLoadingError;
+  }
 
   get template() {
-    return createEmptyPointsListTemplate();
+    if (this.#isLoading) {
+      return '<p class="trip-events__msg">Loading...</p>';
+    }
+    if (this.#isLoadingError) {
+      return '<p class="trip-events__msg">Failed to load information</p>';
+    }
+    return createEmptyPointListTemplate(this.#filterType);
   }
 }
