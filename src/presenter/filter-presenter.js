@@ -1,4 +1,4 @@
-import { FilterOptions, FilterTypes, UpdateType } from '../const';
+import { FilterHasPoints, FilterTypes, UpdateType } from '../const';
 import { remove, render, replace } from '../framework/render';
 import FilterView from '../view/filter-view';
 
@@ -37,7 +37,7 @@ export default class FilterPresenter {
   }
 
   #getActiveFilters(points) {
-    return Object.values(FilterTypes).filter((type) => FilterOptions[type](points));
+    return Object.values(FilterTypes).filter((type) => FilterHasPoints[type](points));
   }
 
   #filterTypeChangeHandler = (filterType) => {
