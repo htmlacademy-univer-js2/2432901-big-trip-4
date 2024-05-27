@@ -6,20 +6,14 @@ import PointView from '../view/point-view';
 
 export default class PointPresenter {
   #container = null;
-
   #destinationsModel = null;
   #offersModel = null;
-
   #onDataChange = null;
   #onModeChange = null;
-
   #point = null;
-
   #pointComponent = null;
   #pointEditComponent = null;
-
   #mode = PointMode.DEFAULT;
-
   constructor({ container, destinationsModel, offersModel, onDataChange, onModeChange }) {
     this.#container = container;
     this.#destinationsModel = destinationsModel;
@@ -32,7 +26,6 @@ export default class PointPresenter {
     const previousPointComponent = this.#pointComponent;
     const previousPointEditComponent = this.#pointEditComponent;
     this.#point = point;
-
     this.#pointComponent = new PointView({
       point: point,
       destinations: this.#destinationsModel.destinations,
@@ -40,7 +33,6 @@ export default class PointPresenter {
       onEditPointClick: this.#pointEditClickHandler,
       onFavoritePointClick: this.#favoritePointClickHandler
     });
-
     this.#pointEditComponent = new PointEditView({
       point: point,
       destinations: this.#destinationsModel.destinations,
@@ -49,12 +41,10 @@ export default class PointPresenter {
       onSubmitForm: this.#formSubmitHandler,
       onCancelFormClick: this.#cancelClickHandler
     });
-
     if (previousPointComponent === null || previousPointEditComponent === null) {
       render(this.#pointComponent, this.#container);
       return;
     }
-
     if (this.#mode === PointMode.DEFAULT) {
       replace(this.#pointComponent, previousPointComponent);
     }
@@ -123,7 +113,7 @@ export default class PointPresenter {
   };
 
   #escKeyDownHandler = (event) => {
-    if (isEscapeButton(event) && this.#pointEditComponent.isActive) {
+    if (isEscapeButton(event)) {
       event.preventDefault();
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
@@ -135,7 +125,7 @@ export default class PointPresenter {
   };
 
   #formRollUpClickHandler = () => {
-    if (this.#pointEditComponent.isActive) {
+    if (!this.#pointEditComponent.isActive) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
@@ -145,7 +135,7 @@ export default class PointPresenter {
     const isMinor = isBigDifference(updatePoint, this.#point);
     if (isMinor) {
       this.#onDataChange(
-        UpdateType.UPDATE_POINT,
+        EditingType.UPDATE_POINT,
         isMinor ? UpdateType.MINOR : UpdateType.PATCH,
         updatePoint
       );
