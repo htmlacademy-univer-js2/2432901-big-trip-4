@@ -1,4 +1,3 @@
-import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointsApiService from './service/points-api-service.js';
 import OffersModel from './model/offers-model.js';
@@ -9,9 +8,9 @@ import DestinationsModel from './model/destinations-model.js';
 import FiltersModel from './model/filters-model.js';
 import NewPointView from './view/new-point-view.js';
 
+const mainElement = document.querySelector('.page-main');
 const tripInfoElement = document.querySelector('.trip-main');
 const filterElement = tripInfoElement.querySelector('.trip-controls__filters');
-const mainElement = document.querySelector('.page-main');
 const eventListElement = mainElement.querySelector('.trip-events');
 
 const AUTHORIZATION = 'Basic anjcdbh57ybf8u';
@@ -25,11 +24,12 @@ const filtersModel = new FiltersModel();
 
 const tripPresenter = new TripPresenter({
   container: eventListElement,
+  tripInfoContainer: tripInfoElement,
   offersModel,
   pointsModel,
   destinationsModel,
   filtersModel,
-  onNewPointDestroy: newPointFormCloseHandler
+  onNewPointDestroy: newPointFormCancelHandler
 });
 
 const filterPresenter = new FilterPresenter({container: filterElement, pointsModel, filtersModel});
@@ -38,7 +38,7 @@ const newPointComponent = new NewPointView({
   onClick: newPointClickHandler
 });
 
-function newPointFormCloseHandler() {
+function newPointFormCancelHandler() {
   newPointComponent.element.disabled = false;
 }
 
@@ -47,7 +47,6 @@ function newPointClickHandler() {
   newPointComponent.element.disabled = true;
 }
 
-render(new TripInfoView(), tripInfoElement, RenderPosition.AFTERBEGIN);
 render(newPointComponent, tripInfoElement, RenderPosition.BEFOREEND);
 
 tripPresenter.init();

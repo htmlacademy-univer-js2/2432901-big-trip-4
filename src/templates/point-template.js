@@ -1,4 +1,4 @@
-import { formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration } from '../utils.js';
+import { formatStringToDateTime, getMonthAndDay, getTime, getPointDuration } from '../utils.js';
 import he from 'he';
 
 function createPointOffersTemplate(offers, checkedOffers) {
@@ -21,16 +21,16 @@ export function createPointTemplate(point, destinations, pointOffers) {
   const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
   return `<li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime=${formatStringToDateTime(dateFrom)}>${formatStringToShortDate(dateFrom)}</time>
+    <time class="event__date" datetime=${formatStringToDateTime(dateFrom)}>${getMonthAndDay(dateFrom)}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${type} ${he.encode(destinationName)}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime=${formatStringToDateTime(dateFrom)}>${formatStringToTime(dateFrom)}</time>
+        <time class="event__start-time" datetime=${formatStringToDateTime(dateFrom)}>${getTime(dateFrom)}</time>
         &mdash;
-        <time class="event__end-time" datetime=${formatStringToDateTime(dateTo)}>${formatStringToTime(dateTo)}</time>
+        <time class="event__end-time" datetime=${formatStringToDateTime(dateTo)}>${getTime(dateTo)}</time>
       </p>
       <p class="event__duration">${getPointDuration(point)}</p>
     </div>

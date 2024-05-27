@@ -19,7 +19,7 @@ export default class EmptyPointListView extends AbstractView{
       return '<p class="trip-events__msg">Loading...</p>';
     }
     if (this.#isLoadingError) {
-      return '<p class="trip-events__msg">Failed to load information</p>';
+      return '<p class="trip-events__msg">Failed to load latest route information</p>';
     }
     return createEmptyPointListTemplate(this.#filterType);
   }

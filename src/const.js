@@ -1,28 +1,10 @@
 import { isPointPast, isPointPresent, isPointFuture, sortByDay, sortByEvent, sortByOffers, sortByPrice, sortByTime } from './utils';
 
-export const DESTINATION_COUNT = 5;
-export const POINT_COUNT = 5;
-export const OFFER_COUNT = 5;
-
-export const Price = {
-  MIN: 1,
-  MAX: 1000
-};
-
 export const Duration = {
   HOUR: 5,
   DAY: 5,
   MINUTE: 59
 };
-
-export const DESTINATIONS = [
-  'Amsterdam',
-  'Chamonix',
-  'Chicago',
-  'Los Angeles',
-  'Paris',
-  'Perm'
-];
 
 export const POINTS_TYPES = [
   'taxi',
@@ -36,18 +18,7 @@ export const POINTS_TYPES = [
   'restaurant'
 ];
 
-export const OFFERS = [
-  'Order Uber',
-  'Add luggage',
-  'Rent a car',
-  'Add meal',
-  'Switch to comfort class',
-  'Switch to a business class'
-];
-
 export const DEFAULT_TYPE = 'flight';
-
-export const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.';
 
 export const EmptyPoint = {
   price: 0,
@@ -61,16 +32,16 @@ export const EmptyPoint = {
 
 export const FilterTypes = {
   EVERYTHING: 'everything',
-  FUTURE: 'future',
+  PAST: 'past',
   PRESENT: 'present',
-  PAST: 'past'
+  FUTURE: 'future'
 };
 
 export const FilterOptions = {
   [FilterTypes.EVERYTHING]: (points) => [...points],
-  [FilterTypes.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
+  [FilterTypes.PAST]: (points) => points.filter((point) => isPointPast(point)),
   [FilterTypes.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
-  [FilterTypes.PAST]: (points) => points.filter((point) => isPointPast(point))
+  [FilterTypes.FUTURE]: (points) => points.filter((point) => isPointFuture(point))
 };
 
 export const SortTypes = {
@@ -131,4 +102,11 @@ export const ButtonText = {
 export const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000
+};
+
+export const FilterHasPoints = {
+  [FilterTypes.EVERYTHING]: () => true,
+  [FilterTypes.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
+  [FilterTypes.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
+  [FilterTypes.PAST]: (points) => points.some((point) => isPointPast(point))
 };

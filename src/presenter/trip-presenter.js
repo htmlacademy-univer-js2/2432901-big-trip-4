@@ -3,14 +3,14 @@ import EventListView from '../view/event-list-view';
 import { RenderPosition, remove, render } from '../framework/render';
 import EmptyPointListView from '../view/empty-point-list-view';
 import PointPresenter from './point-presenter';
-import { sortByDay, sortByPrice, sortByTime } from '../utils';
-import { ACTIVE_SORT_TYPES, FilterOptions, FilterTypes, SortTypes, UpdateType, EditingType, TimeLimit } from '../const';
-import NewPointPresenter from './new-point-presenter';
+import TripInfoPresenter from './trip-info-presenter';
+import { ACTIVE_SORT_TYPES, FilterOptions, FilterTypes, SortTypes, SortingOptions, TimeLimit, UpdateType, EditingType } from '../const';import NewPointPresenter from './new-point-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 
 export default class TripPresenter {
   #container = null;
+  #tripInfoContainer = null;
 
   #points = [];
 
@@ -21,6 +21,7 @@ export default class TripPresenter {
 
   #pointPresenter = new Map();
   #newPointPresenter = null;
+  #tripInfoPresenter = null;
 
   #sortComponent = null;
   #emptyListComponent = null;
@@ -36,8 +37,9 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({container, offersModel, pointsModel, destinationsModel, filtersModel, onNewPointDestroy}) {
+  constructor({container, tripInfoContainer, offersModel, pointsModel, destinationsModel, filtersModel, onNewPointDestroy}) {
     this.#container = container;
+    this.#tripInfoContainer = tripInfoContainer;
     this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
     this.#destinationsModel = destinationsModel;
@@ -60,18 +62,7 @@ export default class TripPresenter {
     const points = this.#pointsModel.points;
     const filteredPoints = FilterOptions[this.#filterType](points);
 
-    switch (this.#currentSortType) {
-      case SortTypes.TIME:
-        filteredPoints.sort(sortByTime);
-        break;
-      case SortTypes.PRICE:
-        filteredPoints.sort(sortByPrice);
-        break;
-      default:
-        filteredPoints.sort(sortByDay);
-        break;
-    }
-    return filteredPoints;
+    return SortingOptions[this.#currentSortType](filteredPoints);
   }
 
   init() {
@@ -99,6 +90,20 @@ export default class TripPresenter {
     this.#renderPoints();
   }
 
+  #renderTripinfo = () => {
+    this.#tripInfoPresenter = new TripInfoPresenter({
+      container: this.#tripInfoContainer,
+      destinationsModel: this.#destinationsModel,
+      offersModel: this.#offersModel
+    });
+    const sortedPoints = SortingOptions[SortTypes.DAY](this.points);
+    this.#tripInfoPresenter.init(sortedPoints);
+  };
+
+  #clearTripInfo = () => {
+    this.#tripInfoPresenter.destroy();
+  };
+
   #renderSort = () => {
     const sortTypes = Object.values(SortTypes).map((sortType) => ({
       type: sortType,
@@ -111,6 +116,9 @@ export default class TripPresenter {
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#sortTypeChangeHandler
     });
+
+    this.#clearTripInfo();
+    this.#renderTripinfo();
 
     render(this.#sortComponent, this.#container);
   };
@@ -183,7 +191,8 @@ export default class TripPresenter {
         this.#pointPresenter.get(update.id).setSaving();
         try {
           await this.#pointsModel.update(updateType, update);
-        } catch (err) {
+        }
+        catch (err) {
           this.#pointPresenter.get(update.id).setAborting();
         }
         break;
@@ -191,7 +200,8 @@ export default class TripPresenter {
         this.#newPointPresenter.setSaving();
         try {
           await this.#pointsModel.add(updateType, update);
-        } catch (err) {
+        }
+        catch (err) {
           this.#newPointPresenter.setAborting();
         }
         break;
@@ -199,7 +209,8 @@ export default class TripPresenter {
         this.#pointPresenter.get(update.id).setDeleting();
         try {
           await this.#pointsModel.remove(updateType, update);
-        } catch (err) {
+        }
+        catch (err) {
           this.#pointPresenter.get(update.id).setAborting();
         }
         break;
@@ -217,6 +228,8 @@ export default class TripPresenter {
         this.#renderTrip();
         break;
       case UpdateType.MINOR:
+        this.#clearTripInfo();
+        this.#renderTripinfo();
         this.#clearTrip();
         this.#renderTrip();
         break;
@@ -225,6 +238,7 @@ export default class TripPresenter {
           this.#isLoadingError = data.isError;
         }
         this.#isLoading = false;
+        this.#renderTripinfo();
         this.#clearTrip();
         this.#renderTrip();
         break;

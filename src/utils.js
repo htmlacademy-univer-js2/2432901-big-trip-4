@@ -1,4 +1,4 @@
-import { Duration } from './const';
+import { Duration, SortTypes, SortingOptions } from './const';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -34,11 +34,11 @@ function formatStringToDateTime(date) {
   return dayjs(date).format('YY/MM/DD HH:mm');
 }
 
-function formatStringToShortDate(date) {
+function getMonthAndDay(date) {
   return dayjs(date).format('MMM DD');
 }
 
-function formatStringToTime(date) {
+function getTime(date) {
   return dayjs(date).format('HH:mm');
 }
 
@@ -155,4 +155,37 @@ function adaptToServer(point) {
   return adaptedPoint;
 }
 
-export {getRandomInteger, getRandomValue, formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton};
+function getTripInfoTitle(points = [], destinations = []) {
+  const tripDestinations = SortingOptions[SortTypes.DAY]([...points]).map((point) => destinations.find((destination) => destination.id === point.destination).name);
+  if (tripDestinations.length <= 3) {
+    return tripDestinations.join('&nbsp;&mdash;&nbsp;');
+  }
+  else {
+    return`${tripDestinations.at(0)}&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;${tripDestinations.at(-1)}`;
+  }
+}
+
+function getTripInfoDuration(points = []) {
+  const sortedPoints = SortingOptions[SortTypes.DAY]([...points]);
+  if (sortedPoints.length > 0) {
+    return `${dayjs(sortedPoints.at(0).dateFrom).format('DD MMM')}&nbsp;&mdash;&nbsp;${dayjs(sortedPoints.at(-1).dateFrom).format('DD MMM')}`;
+  }
+  else {
+    return '';
+  }
+}
+
+function getTripOffersCost(offerIds = [], offers = []) {
+  const offersMap = new Map(offers.map((offer) => [offer.id, offer.price]));
+  return offerIds.reduce((cost, id) => cost + (offersMap.get(id) || 0), 0);
+}
+
+function getTripInfoCost(points = [], offers = []) {
+  const offersMap = new Map(offers.map((offer) => [offer.type, offer.offers]));
+  return points.reduce((cost, point) => {
+    const pointOffers = offersMap.get(point.type) || [];
+    return cost + point.price + getTripOffersCost(point.offers, pointOffers);
+  }, 0);
+}
+
+export {getRandomInteger, getRandomValue, formatStringToDateTime, getMonthAndDay, getTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
