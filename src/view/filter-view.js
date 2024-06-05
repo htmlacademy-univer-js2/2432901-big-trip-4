@@ -3,11 +3,11 @@ import { createFilterTemplate } from '../templates/filter-template.js';
 export default class FilterView extends AbstractView {
   #activeFilters = [];
   #selectedFilter = null;
-  #onFilterTypeChange = null;
+  #handleFilterTypeChange = null;
 
   #filterTypeChangeHandler = (event) => {
     event.preventDefault();
-    this.#onFilterTypeChange?.(event.target.dataset.filterType);
+    this.#handleFilterTypeChange?.(event.target.dataset.filterType);
   };
 
   constructor({activeFilters, selectedFilter, onFilterTypeChange}) {
@@ -15,7 +15,7 @@ export default class FilterView extends AbstractView {
     this.#activeFilters = activeFilters;
     this.#selectedFilter = selectedFilter;
 
-    this.#onFilterTypeChange = onFilterTypeChange;
+    this.#handleFilterTypeChange = onFilterTypeChange;
 
     this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
