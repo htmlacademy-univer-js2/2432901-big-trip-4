@@ -12,19 +12,19 @@ export default class PointEditView extends AbstractStatefulView {
   #pointOffers = null;
   #onRollUpPointClick = null;
   #isCreating = null;
-  #onSubmitForm = null;
+  #onFormSubmit = null;
   #onCancelFormClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point = EmptyPoint, destinations, pointOffers, isCreating = false, onRollUpPointClick, onSubmitForm, onCancelFormClick}) {
+  constructor({point = EmptyPoint, destinations, pointOffers, isCreating = false, onRollUpPointClick, onFormSubmit, onCancelFormClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#pointOffers = pointOffers;
     this.#isCreating = isCreating;
     this.#onRollUpPointClick = onRollUpPointClick;
-    this.#onSubmitForm = onSubmitForm;
+    this.#onFormSubmit = onFormSubmit;
     this.#onCancelFormClick = onCancelFormClick;
 
     this._setState(PointEditView.parsePointToState({point}));
@@ -47,7 +47,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #submitFormHandler = (event) => {
     event.preventDefault();
-    this.#onSubmitForm(this._state.point);
+    this.#onFormSubmit(this._state.point);
   };
 
   #cancelClickHandler = (event) => {
