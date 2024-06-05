@@ -8,15 +8,15 @@ export default class NewPointPresenter {
   #destinationsModel = null;
   #offersModel = null;
   #pointEditComponent = null;
-  #onDataChange = null;
-  #onDestroy = null;
+  #handleDataChange = null;
+  #handleDestroy = null;
 
   constructor({ container, destinationsModel, offersModel, onDataChange, onDestroy }) {
     this.#container = container;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
-    this.#onDataChange = onDataChange;
-    this.#onDestroy = onDestroy;
+    this.#handleDataChange = onDataChange;
+    this.#handleDestroy = onDestroy;
   }
 
   init() {
@@ -43,7 +43,7 @@ export default class NewPointPresenter {
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#onDestroy();
+    this.#handleDestroy();
   }
 
   setSaving() {
@@ -65,7 +65,7 @@ export default class NewPointPresenter {
   }
 
   #formSubmitHandler = (point) => {
-    this.#onDataChange(
+    this.#handleDataChange(
       EditingType.ADD_POINT,
       UpdateType.MINOR,
       point
