@@ -2,11 +2,11 @@ import AbstractView from '../framework/view/abstract-view';
 import { createNewPointTemplate } from '../templates/new-point-template';
 
 export default class NewPointView extends AbstractView {
-  #onClick = null;
+  #handleClick = null;
 
   constructor({onClick}) {
     super();
-    this.#onClick = onClick;
+    this.#handleClick = onClick;
     this.element.addEventListener('click', this.#clickHandler);
   }
 
@@ -16,6 +16,6 @@ export default class NewPointView extends AbstractView {
 
   #clickHandler = (event) => {
     event.preventDefault();
-    this.#onClick();
+    this.#handleClick();
   };
 }

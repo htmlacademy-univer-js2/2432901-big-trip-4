@@ -4,13 +4,13 @@ import { createSortTemplate } from '../templates/sort-template';
 export default class SortView extends AbstractView {
   #sortTypes = null;
   #currentSortType = null;
-  #onSortTypeChange = null;
+  #handleSortTypeChange = null;
 
   constructor({ sortTypes, currentSortType, onSortTypeChange }) {
     super();
     this.#sortTypes = sortTypes;
     this.#currentSortType = currentSortType;
-    this.#onSortTypeChange = onSortTypeChange;
+    this.#handleSortTypeChange = onSortTypeChange;
 
     this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
@@ -21,6 +21,6 @@ export default class SortView extends AbstractView {
 
   #sortTypeChangeHandler = (event) => {
     event.preventDefault();
-    this.#onSortTypeChange(event.target.value.split('-')[1]);
+    this.#handleSortTypeChange(event.target.value.split('-')[1]);
   };
 }
