@@ -86,9 +86,9 @@ export const EditingType = {
 
 export const EmptyListText = {
   [FilterTypes.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterTypes.FUTURE]: 'There are no future events',
-  [FilterTypes.PRESENT]: 'There are no present events',
-  [FilterTypes.PAST]: 'There are no past events'
+  [FilterTypes.FUTURE]: 'There are no future events now',
+  [FilterTypes.PRESENT]: 'There are no present events now',
+  [FilterTypes.PAST]: 'There are no past events now'
 };
 
 export const ButtonText = {
@@ -105,7 +105,7 @@ export const TimeLimit = {
 };
 
 export const FilterHasPoints = {
-  [FilterTypes.EVERYTHING]: () => true,
+  [FilterTypes.EVERYTHING]: (points) => points.length,
   [FilterTypes.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
   [FilterTypes.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
   [FilterTypes.PAST]: (points) => points.some((point) => isPointPast(point))
