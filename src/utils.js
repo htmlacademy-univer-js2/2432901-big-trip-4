@@ -120,7 +120,7 @@ function sortByOffers(pointA, pointB) {
 }
 
 function isBigDifference(pointA, pointB) {
-  return pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || sortByTime(pointA, pointB) !== 0;
+  return pointA.dateFrom !== pointB.dateFrom || pointA.price !== pointB.price || sortByTime(pointA, pointB) !== 0;
 }
 
 function adaptToClient(point) {
