@@ -8,7 +8,7 @@ export default class EmptyPointListView extends AbstractView{
   #isLoading = false;
   #isLoadingError = false;
 
-  constructor({filterType, isLoading = false, isLoadingError = false}) {
+  constructor({filterType, isLoading, isLoadingError}) {
     super();
     this.#filterType = filterType;
     this.#isLoading = isLoading;

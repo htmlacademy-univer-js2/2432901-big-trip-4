@@ -1,6 +1,6 @@
 import { POINTS_TYPES, ButtonText } from '../const.js';
 import he from 'he';
-import { formatStringToDateTime } from '../utils.js';
+import { getFullDate } from '../utils.js';
 
 function createPointCitiesOptionsTemplate(destinations) {
   return ( `${destinations.map((destination) => `<option value="${destination.name}"></option>`).join('')} `);
@@ -92,10 +92,10 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
         </div>
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-${id}">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" ${point.dateFrom ? formatStringToDateTime(dateFrom) : ''} ${isActive ? '' : 'disabled'}>
+          <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" ${point.dateFrom ? getFullDate(dateFrom) : ''} ${isActive ? '' : 'disabled'}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-${id}">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" ${point.dateTo ? formatStringToDateTime(dateTo) : ''} ${isActive ? '' : 'disabled'}>
+          <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" ${point.dateTo ? getFullDate(dateTo) : ''} ${isActive ? '' : 'disabled'}>
         </div>
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-${id}">

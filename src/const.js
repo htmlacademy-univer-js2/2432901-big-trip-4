@@ -98,7 +98,7 @@ export const TimeLimit = {
   UPPER_LIMIT: 1000
 };
 
-export const FilterHasPoints = {
+export const filterPointsByType = {
   [FilterTypes.EVERYTHING]: () => true,
   [FilterTypes.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
   [FilterTypes.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
