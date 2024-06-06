@@ -1,4 +1,4 @@
-import { Duration, SortTypes, SortingOptions } from './const';
+import { SortTypes, SortingOptions } from './const';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -60,19 +60,6 @@ function getPointDuration(point) {
   }
 
   return pointDuration;
-}
-
-function getDate({ next }) {
-  const minsGap = getRandomInteger(0, Duration.MINUTE);
-  const hoursGap = getRandomInteger(1, Duration.HOUR);
-  const daysGap = getRandomInteger(0, Duration.DAY);
-  let date = dayjs().subtract(getRandomInteger(0, Duration.DAY), 'day').toDate();
-
-  if (next) {
-    date = dayjs(date).add(minsGap, 'minute').add(hoursGap, 'hour').add(daysGap, 'day').toDate();
-  }
-
-  return date;
 }
 
 
@@ -188,4 +175,4 @@ function getTripInfoCost(points = [], offers = []) {
   }, 0);
 }
 
-export {getRandomInteger, getRandomValue, formatStringToDateTime, getMonthAndDay, getTime, getPointDuration, getDate, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
+export {getRandomInteger, getRandomValue, formatStringToDateTime, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};

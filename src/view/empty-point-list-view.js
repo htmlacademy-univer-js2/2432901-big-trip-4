@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 import { createEmptyPointListTemplate } from '../templates/empty-point-list-template';
-
+import { createLoadingTemplate } from '../templates/loading-template';
+import { createFailedLoadingTemplate } from '../templates/failed-loading-template';
 
 export default class EmptyPointListView extends AbstractView{
   #filterType = null;
@@ -16,10 +17,10 @@ export default class EmptyPointListView extends AbstractView{
 
   get template() {
     if (this.#isLoading) {
-      return '<p class="trip-events__msg">Loading...</p>';
+      return createLoadingTemplate();
     }
     if (this.#isLoadingError) {
-      return '<p class="trip-events__msg">Failed to load latest route information</p>';
+      return createFailedLoadingTemplate();
     }
     return createEmptyPointListTemplate(this.#filterType);
   }

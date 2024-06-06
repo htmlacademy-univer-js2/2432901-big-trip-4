@@ -2,7 +2,6 @@ import { UpdateType, EditingType } from '../const';
 import { isEscapeButton } from '../utils';
 import { RenderPosition, remove, render } from '../framework/render';
 import PointEditView from '../view/point-edit-view';
-
 export default class NewPointPresenter {
   #container = null;
   #destinationsModel = null;
@@ -28,7 +27,7 @@ export default class NewPointPresenter {
       pointOffers: this.#offersModel.offers,
       isCreating: true,
       onRollUpPointClick: this.#cancelClickHandler,
-      onSubmitForm: this.#formSubmitHandler,
+      onFormSubmit: this.#formSubmitHandler,
       onCancelFormClick: this.#cancelClickHandler
     });
     render(this.#pointEditComponent, this.#container.element, RenderPosition.AFTERBEGIN);
@@ -39,7 +38,6 @@ export default class NewPointPresenter {
     if (this.#pointEditComponent === null) {
       return;
     }
-
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
