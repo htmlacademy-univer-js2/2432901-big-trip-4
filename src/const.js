@@ -1,11 +1,5 @@
 import { isPointPast, isPointPresent, isPointFuture, sortByDay, sortByEvent, sortByOffers, sortByPrice, sortByTime } from './utils';
 
-export const Duration = {
-  HOUR: 5,
-  DAY: 5,
-  MINUTE: 59
-};
-
 export const POINTS_TYPES = [
   'taxi',
   'bus',
