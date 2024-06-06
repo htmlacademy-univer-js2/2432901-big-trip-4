@@ -30,7 +30,7 @@ function isEscapeButton (evt) {
   return evt.key === 'Escape';
 }
 
-function formatStringToDateTime(date) {
+function getFullDate(date) {
   return dayjs(date).format('YY/MM/DD HH:mm');
 }
 
@@ -62,10 +62,6 @@ function getPointDuration(point) {
   return pointDuration;
 }
 
-
-function getFullDate(date) {
-  return dayjs(date).format('DD/MM/YY hh:mm');
-}
 
 function isPointPast(point) {
   return dayjs().isAfter(point.dateTo);
@@ -175,4 +171,4 @@ function getTripInfoCost(points = [], offers = []) {
   }, 0);
 }
 
-export {getRandomInteger, getRandomValue, formatStringToDateTime, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, getFullDate, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
+export {getRandomInteger, getRandomValue, getFullDate, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};

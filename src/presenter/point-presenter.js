@@ -14,6 +14,7 @@ export default class PointPresenter {
   #pointComponent = null;
   #pointEditComponent = null;
   #mode = PointMode.DEFAULT;
+
   constructor({ container, destinationsModel, offersModel, onDataChange, onModeChange }) {
     this.#container = container;
     this.#destinationsModel = destinationsModel;
