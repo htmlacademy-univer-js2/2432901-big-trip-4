@@ -29,7 +29,7 @@ export default class PointsModel extends Observable {
       this.#points = points.map(adaptToClient);
       this._notify(UpdateType.INIT, {});
     }
-    catch (err) {
+    catch (error) {
       this.#points = [];
       this._notify(UpdateType.INIT, {isError: true});
     }
@@ -37,38 +37,38 @@ export default class PointsModel extends Observable {
 
   async add(updateType, point) {
     try {
-      const adaptedPointToServer = adaptToServer(point);
-      const response = await this.#apiService.addPoint(adaptedPointToServer);
+      const adaptedPoint = adaptToServer(point);
+      const response = await this.#apiService.addPoint(adaptedPoint);
       const newPoint = adaptToClient(response);
       this.#points.push(newPoint);
       this._notify(updateType, newPoint);
     }
-    catch (err) {
+    catch (error) {
       throw new Error('Can\'t add point');
     }
   }
 
   async update(updateType, point) {
     try {
-      const adaptedPointToServer = adaptToServer(point);
-      const response = await this.#apiService.updatePoint(adaptedPointToServer);
+      const adaptedPoint = adaptToServer(point);
+      const response = await this.#apiService.updatePoint(adaptedPoint);
       const updatedPoint = adaptToClient(response);
       this.#points = updatePoint(this.#points, updatedPoint);
       this._notify(updateType, updatedPoint);
     }
-    catch (err) {
+    catch (error) {
       throw new Error('Can\'t update point');
     }
   }
 
   async remove(updateType, point) {
     try {
-      const adaptedPointToServer = adaptToServer(point);
-      await this.#apiService.deletePoint(adaptedPointToServer);
+      const adaptedPoint = adaptToServer(point);
+      await this.#apiService.deletePoint(adaptedPoint);
       this.#points = this.#points.filter((item) => item.id !== point.id);
       this._notify(updateType);
     }
-    catch (err) {
+    catch (error) {
       throw new Error('Can\'t delete point');
     }
   }

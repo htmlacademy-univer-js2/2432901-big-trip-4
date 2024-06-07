@@ -1,7 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { EmptyPoint } from '../const.js';
 import { createPointEditTemplate } from '../templates/point-edit-template.js';
-
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 

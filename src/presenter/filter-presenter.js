@@ -1,6 +1,7 @@
-import { filterPointsByType, FilterTypes, UpdateType } from '../const';
+import { FilterTypes, UpdateType } from '../const';
 import { remove, render, replace } from '../framework/render';
 import FilterView from '../view/filter-view';
+import { filterPointsByType } from '../utils';
 
 export default class FilterPresenter {
   #container = null;
