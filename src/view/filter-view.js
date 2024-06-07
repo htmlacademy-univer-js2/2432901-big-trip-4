@@ -5,11 +5,6 @@ export default class FilterView extends AbstractView {
   #selectedFilter = null;
   #handleFilterTypeChange = null;
 
-  #filterTypeChangeHandler = (event) => {
-    event.preventDefault();
-    this.#handleFilterTypeChange?.(event.target.dataset.filterType);
-  };
-
   constructor({activeFilters, selectedFilter, onFilterTypeChange}) {
     super();
     this.#activeFilters = activeFilters;
@@ -26,4 +21,9 @@ export default class FilterView extends AbstractView {
       selectedFilter: this.#selectedFilter
     });
   }
+
+  #filterTypeChangeHandler = (event) => {
+    event.preventDefault();
+    this.#handleFilterTypeChange?.(event.target.dataset.filterType);
+  };
 }

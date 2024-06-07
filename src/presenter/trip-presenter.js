@@ -4,7 +4,9 @@ import { RenderPosition, remove, render } from '../framework/render';
 import EmptyPointListView from '../view/empty-point-list-view';
 import PointPresenter from './point-presenter';
 import TripInfoPresenter from './trip-info-presenter';
-import { ACTIVE_SORT_TYPES, FilterOptions, FilterTypes, SortTypes, SortingOptions, TimeLimit, UpdateType, EditingType } from '../const';import NewPointPresenter from './new-point-presenter';
+import { ACTIVE_SORT_TYPES, FilterTypes, SortTypes, TimeLimit, UpdateType, EditingType } from '../const';
+import { FilterOptions, SortingOptions } from '../utils';
+import NewPointPresenter from './new-point-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 
@@ -24,7 +26,7 @@ export default class TripPresenter {
   #tripInfoPresenter = null;
 
   #sortComponent = null;
-  #emptyListComponent = null;
+  #emptyPointListComponent = null;
   #eventListComponent = new EventListView();
 
   #currentSortType = SortTypes.DAY;
@@ -32,6 +34,7 @@ export default class TripPresenter {
 
   #isLoading = true;
   #isLoadingError = false;
+
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -71,17 +74,17 @@ export default class TripPresenter {
 
   #renderTrip() {
     if (this.#isLoading) {
-      this.#renderEmptyListView({isLoading: true});
+      this.#renderEmptyPointListView({isLoading: true});
       return;
     }
 
     if (this.#isLoadingError) {
-      this.#renderEmptyListView({isLoadingError: true});
+      this.#renderEmptyPointListView({isLoadingError: true});
       return;
     }
 
     if (this.points.length === 0) {
-      this.#renderEmptyListView();
+      this.#renderEmptyPointListView();
       return;
     }
 
@@ -139,14 +142,14 @@ export default class TripPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #renderEmptyListView = ({isLoading = false, isLoadingError = false} = {}) => {
-    this.#emptyListComponent = new EmptyPointListView({
+  #renderEmptyPointListView = ({isLoading = false, isLoadingError = false} = {}) => {
+    this.#emptyPointListComponent = new EmptyPointListView({
       filterType: this.#filterType,
       isLoading,
       isLoadingError
     });
 
-    render(this.#emptyListComponent, this.#container, RenderPosition.AFTERBEGIN);
+    render(this.#emptyPointListComponent, this.#container, RenderPosition.AFTERBEGIN);
   };
 
   createPoint = () => {
@@ -162,7 +165,7 @@ export default class TripPresenter {
 
     remove(this.#sortComponent);
 
-    remove(this.#emptyListComponent);
+    remove(this.#emptyPointListComponent);
 
     if (resetSort) {
       this.#currentSortType = SortTypes.DAY;
@@ -192,7 +195,7 @@ export default class TripPresenter {
         try {
           await this.#pointsModel.update(updateType, update);
         }
-        catch (err) {
+        catch (error) {
           this.#pointPresenter.get(update.id).setAborting();
         }
         break;
@@ -201,7 +204,7 @@ export default class TripPresenter {
         try {
           await this.#pointsModel.add(updateType, update);
         }
-        catch (err) {
+        catch (error) {
           this.#newPointPresenter.setAborting();
         }
         break;
@@ -210,7 +213,7 @@ export default class TripPresenter {
         try {
           await this.#pointsModel.remove(updateType, update);
         }
-        catch (err) {
+        catch (error) {
           this.#pointPresenter.get(update.id).setAborting();
         }
         break;

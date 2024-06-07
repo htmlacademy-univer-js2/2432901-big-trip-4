@@ -1,5 +1,3 @@
-import { isPointPast, isPointPresent, isPointFuture, sortByDay, sortByEvent, sortByOffers, sortByPrice, sortByTime } from './utils';
-
 export const POINTS_TYPES = [
   'taxi',
   'bus',
@@ -31,27 +29,12 @@ export const FilterTypes = {
   FUTURE: 'future'
 };
 
-export const FilterOptions = {
-  [FilterTypes.EVERYTHING]: (points) => [...points],
-  [FilterTypes.PAST]: (points) => points.filter((point) => isPointPast(point)),
-  [FilterTypes.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
-  [FilterTypes.FUTURE]: (points) => points.filter((point) => isPointFuture(point))
-};
-
 export const SortTypes = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
   OFFERS: 'offers'
-};
-
-export const SortingOptions = {
-  [SortTypes.DAY]: (points) => [...points].sort(sortByDay),
-  [SortTypes.EVENT]: (points) => [...points].sort(sortByEvent),
-  [SortTypes.TIME]: (points) => [...points].sort(sortByTime),
-  [SortTypes.PRICE]: (points) => [...points].sort(sortByPrice),
-  [SortTypes.OFFERS]: (points) => [...points].sort(sortByOffers)
 };
 
 export const ACTIVE_SORT_TYPES = [
@@ -78,7 +61,7 @@ export const EditingType = {
   DELETE_POINT: 'delete-point'
 };
 
-export const EmptyListText = {
+export const EmptyPointListText = {
   [FilterTypes.EVERYTHING]: 'Click New Event to create your first point',
   [FilterTypes.FUTURE]: 'There are no future events now',
   [FilterTypes.PRESENT]: 'There are no present events now',
@@ -98,9 +81,4 @@ export const TimeLimit = {
   UPPER_LIMIT: 1000
 };
 
-export const filterPointsByType = {
-  [FilterTypes.EVERYTHING]: () => true,
-  [FilterTypes.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
-  [FilterTypes.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
-  [FilterTypes.PAST]: (points) => points.some((point) => isPointPast(point))
-};
+

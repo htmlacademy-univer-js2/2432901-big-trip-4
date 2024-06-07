@@ -1,4 +1,4 @@
-import { SortTypes, SortingOptions } from './const';
+import { SortTypes, FilterTypes } from './const';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -138,6 +138,14 @@ function adaptToServer(point) {
   return adaptedPoint;
 }
 
+const SortingOptions = {
+  [SortTypes.DAY]: (points) => [...points].sort(sortByDay),
+  [SortTypes.EVENT]: (points) => [...points].sort(sortByEvent),
+  [SortTypes.TIME]: (points) => [...points].sort(sortByTime),
+  [SortTypes.PRICE]: (points) => [...points].sort(sortByPrice),
+  [SortTypes.OFFERS]: (points) => [...points].sort(sortByOffers)
+};
+
 function getTripInfoTitle(points = [], destinations = []) {
   const tripDestinations = SortingOptions[SortTypes.DAY]([...points]).map((point) => destinations.find((destination) => destination.id === point.destination).name);
   if (tripDestinations.length <= 3) {
@@ -171,4 +179,18 @@ function getTripInfoCost(points = [], offers = []) {
   }, 0);
 }
 
-export {getRandomInteger, getRandomValue, getFullDate, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
+const FilterOptions = {
+  [FilterTypes.EVERYTHING]: (points) => [...points],
+  [FilterTypes.PAST]: (points) => points.filter((point) => isPointPast(point)),
+  [FilterTypes.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterTypes.FUTURE]: (points) => points.filter((point) => isPointFuture(point))
+};
+
+const filterPointsByType = {
+  [FilterTypes.EVERYTHING]: () => true,
+  [FilterTypes.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
+  [FilterTypes.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
+  [FilterTypes.PAST]: (points) => points.some((point) => isPointPast(point))
+};
+
+export {getRandomInteger, SortingOptions, FilterOptions, filterPointsByType, getRandomValue, getFullDate, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
