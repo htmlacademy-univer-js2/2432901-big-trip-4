@@ -9,12 +9,15 @@ export default class PointEditView extends AbstractStatefulView {
   #point = null;
   #destinations = null;
   #pointOffers = null;
-  #handleRollUpPointClick = null;
-  #isCreating = null;
+
   #handleFormSubmit = null;
   #handleCancelFormClick = null;
+  #handleRollUpPointClick = null;
+
   #datepickerFrom = null;
   #datepickerTo = null;
+
+  #isCreating = null;
 
   constructor({point = EmptyPoint, destinations, pointOffers, isCreating = false, onRollUpPointClick, onFormSubmit, onCancelFormClick}) {
     super();

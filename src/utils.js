@@ -166,16 +166,29 @@ function getTripInfoDuration(points = []) {
   }
 }
 
-function getTripOffersCost(offerIds = [], offers = []) {
-  const offersMap = new Map(offers.map((offer) => [offer.id, offer.price]));
-  return offerIds.reduce((cost, id) => cost + (offersMap.get(id) || 0), 0);
+function getOffersCost(offerIds = [], offers = []) {
+  const offersPriceById = offers.reduce((priceMap, offer) => {
+    if (offer && offer.id && typeof offer.price === 'number') {
+      priceMap[offer.id] = offer.price;
+    }
+    return priceMap;
+  }, {});
+
+  return offerIds.reduce((totalCost, id) => {
+    const offerCost = offersPriceById[id];
+    return totalCost + (typeof offerCost === 'number' ? offerCost : 0);
+  }, 0);
 }
 
-function getTripInfoCost(points = [], offers = []) {
-  const offersMap = new Map(offers.map((offer) => [offer.type, offer.offers]));
-  return points.reduce((cost, point) => {
-    const pointOffers = offersMap.get(point.type) || [];
-    return cost + point.price + getTripOffersCost(point.offers, pointOffers);
+function getTotalTripCost(points = [], offers = []) {
+  const offersByType = offers.reduce((offersObj, offer) => {
+    offersObj[offer.type] = offer.offers;
+    return offersObj;
+  }, {});
+
+  return points.reduce((totalCost, point) => {
+    const pointOffers = offersByType[point.type] || [];
+    return totalCost + point.price + getOffersCost(point.offers, pointOffers);
   }, 0);
 }
 
@@ -193,4 +206,4 @@ const filterPointsByType = {
   [FilterTypes.PAST]: (points) => points.some((point) => isPointPast(point))
 };
 
-export {getRandomInteger, SortingOptions, FilterOptions, filterPointsByType, getRandomValue, getFullDate, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTripInfoCost};
+export {getRandomInteger, SortingOptions, FilterOptions, filterPointsByType, getRandomValue, getFullDate, getMonthAndDay, getTime, getPointDuration, isPointFuture, isPointPresent, isPointPast, updatePoint, sortByDay, sortByTime, sortByPrice, sortByEvent, sortByOffers, isBigDifference, adaptToClient, adaptToServer, isEscapeButton, getTripInfoTitle, getTripInfoDuration, getTotalTripCost};

@@ -1,5 +1,5 @@
-import { UpdateType } from '../const';
 import Observable from '../framework/observable';
+import { UpdateType } from '../const';
 import { adaptToClient, adaptToServer, updatePoint } from '../utils';
 
 export default class PointsModel extends Observable {

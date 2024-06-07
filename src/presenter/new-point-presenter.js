@@ -1,6 +1,6 @@
+import { RenderPosition, remove, render } from '../framework/render';
 import { UpdateType, EditingType } from '../const';
 import { isEscapeButton } from '../utils';
-import { RenderPosition, remove, render } from '../framework/render';
 import PointEditView from '../view/point-edit-view';
 export default class NewPointPresenter {
   #container = null;
@@ -26,12 +26,12 @@ export default class NewPointPresenter {
       destinations: this.#destinationsModel.destinations,
       pointOffers: this.#offersModel.offers,
       isCreating: true,
-      onRollUpPointClick: this.#cancelClickHandler,
-      onFormSubmit: this.#formSubmitHandler,
-      onCancelFormClick: this.#cancelClickHandler
+      onRollUpPointClick: this.#handleCancelClick,
+      onFormSubmit: this.#handleFormSubmit,
+      onCancelFormClick: this.#handleCancelClick
     });
     render(this.#pointEditComponent, this.#container.element, RenderPosition.AFTERBEGIN);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   }
 
   destroy() {
@@ -40,7 +40,7 @@ export default class NewPointPresenter {
     }
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#handleDestroy();
   }
 
@@ -62,7 +62,7 @@ export default class NewPointPresenter {
     this.#pointEditComponent.shake(resetFormState);
   }
 
-  #formSubmitHandler = (point) => {
+  #handleFormSubmit = (point) => {
     this.#handleDataChange(
       EditingType.ADD_POINT,
       UpdateType.MINOR,
@@ -70,11 +70,11 @@ export default class NewPointPresenter {
     );
   };
 
-  #cancelClickHandler = () => {
+  #handleCancelClick = () => {
     this.destroy();
   };
 
-  #escKeyDownHandler = (event) => {
+  #handleEscKeyDown = (event) => {
     if (isEscapeButton(event)) {
       event.preventDefault();
       this.destroy();
