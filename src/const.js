@@ -81,4 +81,13 @@ export const TimeLimit = {
   UPPER_LIMIT: 1000
 };
 
+export const TimePeriods = {
+  MSEC_IN_SEC : 1000,
+  SEC_IN_MIN : 60,
+  MIN_IN_HOUR : 60,
+  HOUR_IN_DAY : 24,
+  MSEC_IN_HOUR : 60 * 60 * 1000,
+  MSEC_IN_DAY : 24 * 60 * 60 * 1000,
+};
+
 

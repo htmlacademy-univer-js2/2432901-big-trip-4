@@ -2,9 +2,10 @@ import { POINTS_TYPES, ButtonText } from '../const.js';
 import he from 'he';
 import { getFullDate } from '../utils.js';
 
-function createPointCitiesOptionsTemplate(destinations) {
+function createPointOptionsTemplate(destinations) {
   return ( `${destinations.map((destination) => `<option value="${destination.name}"></option>`).join('')} `);
 }
+
 function createPointPhotosTemplate(destination) {
   return (
     `<div class="event__photos-container">
@@ -24,7 +25,7 @@ function createPointTypesTemplate(pointId, currentType, isActive) {
       </div>`).join('');
 }
 
-function createPointOffersTemplate(offers, selectedOffers, isActive) {
+function createOffersTemplate(offers, selectedOffers, isActive) {
   const offerItems = offers.offers.map((offer) => {
     const offerName = offer.title.replace(' ', '').toLowerCase();
     return (`<div class="event__offer-selector">
@@ -38,6 +39,7 @@ function createPointOffersTemplate(offers, selectedOffers, isActive) {
   }).join('');
   return `<div class="event__available-offers">${offerItems}</div>`;
 }
+
 function createDestinationTemplate( destination ) {
   return destination.description.length && destination.pictures.length ? `<section class="event__section  event__section--destination" >
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -87,7 +89,7 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
           </label>
           <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${he.encode(destinationName)}" list="destination-list-${id}" ${isActive ? '' : 'disabled'}>
           <datalist id="destination-list-${id}"/>
-            ${createPointCitiesOptionsTemplate(destinations)}
+            ${createPointOptionsTemplate(destinations)}
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
@@ -113,7 +115,7 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          ${createPointOffersTemplate(currentOffers, offers, isActive)}
+          ${createOffersTemplate(currentOffers, offers, isActive)}
         </section>
         ${currentDestination ? `<section class="event__section  event__section--destination">
           ${createDestinationTemplate(currentDestination)}
