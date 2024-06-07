@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 import { createTripInfoTemplate } from '../templates/trip-info-template';
-import { getTripInfoCost, getTripInfoDuration, getTripInfoTitle } from '../utils';
+import { getTotalTripCost, getTripInfoDuration, getTripInfoTitle } from '../utils';
 
 
 export default class TripInfoView extends AbstractView {
@@ -20,7 +20,7 @@ export default class TripInfoView extends AbstractView {
       isEmpty: this.#points.length === 0,
       title: getTripInfoTitle(this.#points, this.#destinations),
       duration: getTripInfoDuration(this.#points),
-      cost: getTripInfoCost(this.#points, this.#offers)
+      cost: getTotalTripCost(this.#points, this.#offers)
     });
   }
 }

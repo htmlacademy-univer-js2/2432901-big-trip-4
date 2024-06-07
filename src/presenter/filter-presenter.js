@@ -1,7 +1,7 @@
-import { FilterTypes, UpdateType } from '../const';
 import { remove, render, replace } from '../framework/render';
-import FilterView from '../view/filter-view';
+import { FilterTypes, UpdateType } from '../const';
 import { filterPointsByType } from '../utils';
+import FilterView from '../view/filter-view';
 
 export default class FilterPresenter {
   #container = null;
@@ -14,8 +14,8 @@ export default class FilterPresenter {
     this.#pointsModel = pointsModel;
     this.#filtersModel = filtersModel;
 
-    this.#pointsModel.addObserver(this.#modelEventHandler);
-    this.#filtersModel.addObserver(this.#modelEventHandler);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
@@ -25,7 +25,7 @@ export default class FilterPresenter {
       activeFilters: this.#getActiveFilters(this.#pointsModel.points),
       selectedFilter: this.#filtersModel.filter,
 
-      onFilterTypeChange: this.#filterTypeChangeHandler
+      onFilterTypeChange: this.#handleFilterTypeChange
     });
 
     if (previousFilterComponent === null) {
@@ -41,11 +41,11 @@ export default class FilterPresenter {
     return Object.values(FilterTypes).filter((type) => filterPointsByType[type](points));
   }
 
-  #filterTypeChangeHandler = (filterType) => {
+  #handleFilterTypeChange = (filterType) => {
     this.#filtersModel.set(UpdateType.MAJOR, filterType);
   };
 
-  #modelEventHandler = (updateType) => {
+  #handleModelEvent = (updateType) => {
     if (updateType !== UpdateType.PATCH) {
       this.init();
     }

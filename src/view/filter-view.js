@@ -24,6 +24,6 @@ export default class FilterView extends AbstractView {
 
   #filterTypeChangeHandler = (event) => {
     event.preventDefault();
-    this.#handleFilterTypeChange?.(event.target.dataset.filterType);
+    this.#handleFilterTypeChange(event.target.value);
   };
 }

@@ -6,13 +6,16 @@ import PointView from '../view/point-view';
 
 export default class PointPresenter {
   #container = null;
-  #destinationsModel = null;
-  #offersModel = null;
-  #handleDataChange = null;
-  #handleModeChange = null;
   #point = null;
+
   #pointComponent = null;
   #pointEditComponent = null;
+
+  #destinationsModel = null;
+  #offersModel = null;
+
+  #handleDataChange = null;
+  #handleModeChange = null;
   #mode = PointMode.DEFAULT;
 
   constructor({ container, destinationsModel, offersModel, onDataChange, onModeChange }) {
@@ -31,24 +34,28 @@ export default class PointPresenter {
       point: point,
       destinations: this.#destinationsModel.destinations,
       pointOffers: this.#offersModel.getByType(point.type),
-      onEditPointClick: this.#pointEditClickHandler,
-      onFavoritePointClick: this.#favoritePointClickHandler
+      onEditPointClick: this.#handlePointEditClick,
+      onFavoritePointClick: this.#handleFavoritePointClick
     });
+
     this.#pointEditComponent = new PointEditView({
       point: point,
       destinations: this.#destinationsModel.destinations,
       pointOffers: this.#offersModel.offers,
-      onRollUpPointClick: this.#formRollUpClickHandler,
-      onFormSubmit: this.#formSubmitHandler,
-      onCancelFormClick: this.#cancelClickHandler
+      onRollUpPointClick: this.#handleFormRollUpClick,
+      onFormSubmit: this.#handleFormSubmit,
+      onCancelFormClick: this.#handleCancelClick
     });
+
     if (previousPointComponent === null || previousPointEditComponent === null) {
       render(this.#pointComponent, this.#container);
       return;
     }
+
     if (this.#mode === PointMode.DEFAULT) {
       replace(this.#pointComponent, previousPointComponent);
     }
+
     if (this.#mode === PointMode.EDIT) {
       replace(this.#pointComponent, previousPointEditComponent);
       this.#mode = PointMode.DEFAULT;
@@ -58,16 +65,16 @@ export default class PointPresenter {
     remove(previousPointEditComponent);
   }
 
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
+  }
+
   reset() {
     if (this.#mode !== PointMode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
-  }
-
-  destroy() {
-    remove(this.#pointComponent);
-    remove(this.#pointEditComponent);
   }
 
   setSaving() {
@@ -102,18 +109,18 @@ export default class PointPresenter {
 
   #replacePointToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#handleModeChange();
     this.#mode = PointMode.EDIT;
   };
 
   #replaceFormToPoint = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#mode = PointMode.DEFAULT;
   };
 
-  #escKeyDownHandler = (event) => {
+  #handleEscKeyDown = (event) => {
     if (isEscapeButton(event)) {
       event.preventDefault();
       this.#pointEditComponent.reset(this.#point);
@@ -121,18 +128,18 @@ export default class PointPresenter {
     }
   };
 
-  #pointEditClickHandler = () => {
+  #handlePointEditClick = () => {
     this.#replacePointToForm();
   };
 
-  #formRollUpClickHandler = () => {
+  #handleFormRollUpClick = () => {
     if (!this.#pointEditComponent.isActive) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
 
-  #formSubmitHandler = (updatePoint) => {
+  #handleFormSubmit = (updatePoint) => {
     const isMinor = isBigDifference(updatePoint, this.#point);
     if (isMinor) {
       this.#handleDataChange(
@@ -146,7 +153,7 @@ export default class PointPresenter {
     }
   };
 
-  #cancelClickHandler = (event) => {
+  #handleCancelClick = (event) => {
     this.#handleDataChange(
       EditingType.DELETE_POINT,
       UpdateType.MINOR,
@@ -154,7 +161,7 @@ export default class PointPresenter {
     );
   };
 
-  #favoritePointClickHandler = () => {
+  #handleFavoritePointClick = () => {
     this.#handleDataChange(
       EditingType.UPDATE_POINT,
       UpdateType.PATCH,

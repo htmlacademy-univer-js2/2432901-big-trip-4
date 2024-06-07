@@ -3,12 +3,16 @@ import TripInfoView from '../view/trip-info-view';
 
 export default class TripInfoPresenter {
   #container = null;
+
   #points = null;
   #destinations = null;
   #offers = null;
+
   #destinationsModel = null;
   #offersModel = null;
+
   #tripInfoComponent = null;
+
   constructor({ container, destinationsModel, offersModel }) {
     this.#container = container;
     this.#destinationsModel = destinationsModel;

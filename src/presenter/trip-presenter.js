@@ -1,11 +1,11 @@
+import { RenderPosition, remove, render } from '../framework/render';
+import { ACTIVE_SORT_TYPES, FilterTypes, SortTypes, TimeLimit, UpdateType, EditingType } from '../const';
+import { FilterOptions, SortingOptions } from '../utils';
 import SortView from '../view/sort-view';
 import EventListView from '../view/event-list-view';
-import { RenderPosition, remove, render } from '../framework/render';
 import EmptyPointListView from '../view/empty-point-list-view';
 import PointPresenter from './point-presenter';
 import TripInfoPresenter from './trip-info-presenter';
-import { ACTIVE_SORT_TYPES, FilterTypes, SortTypes, TimeLimit, UpdateType, EditingType } from '../const';
-import { FilterOptions, SortingOptions } from '../utils';
 import NewPointPresenter from './new-point-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
@@ -43,6 +43,7 @@ export default class TripPresenter {
   constructor({container, tripInfoContainer, offersModel, pointsModel, destinationsModel, filtersModel, onNewPointDestroy}) {
     this.#container = container;
     this.#tripInfoContainer = tripInfoContainer;
+
     this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
     this.#destinationsModel = destinationsModel;
@@ -52,12 +53,12 @@ export default class TripPresenter {
       container: this.#eventListComponent,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
-      onDataChange: this.#actionViewChangeHandler,
+      onDataChange: this.#handleActionViewChange,
       onDestroy: onNewPointDestroy
     });
 
-    this.#pointsModel.addObserver(this.#modelEventHandler);
-    this.#filtersModel.addObserver(this.#modelEventHandler);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -93,7 +94,7 @@ export default class TripPresenter {
     this.#renderPoints();
   }
 
-  #renderTripinfo = () => {
+  #renderTripInfo = () => {
     this.#tripInfoPresenter = new TripInfoPresenter({
       container: this.#tripInfoContainer,
       destinationsModel: this.#destinationsModel,
@@ -117,11 +118,11 @@ export default class TripPresenter {
     this.#sortComponent = new SortView({
       sortTypes: sortTypes,
       currentSortType: this.#currentSortType,
-      onSortTypeChange: this.#sortTypeChangeHandler
+      onSortTypeChange: this.#handleSortTypeChange
     });
 
     this.#clearTripInfo();
-    this.#renderTripinfo();
+    this.#renderTripInfo();
 
     render(this.#sortComponent, this.#container);
   };
@@ -135,8 +136,8 @@ export default class TripPresenter {
       container: this.#eventListComponent.element,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
-      onDataChange: this.#actionViewChangeHandler,
-      onModeChange: this.#modeChangeHandler
+      onDataChange: this.#handleActionViewChange,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
@@ -172,12 +173,12 @@ export default class TripPresenter {
     }
   };
 
-  #modeChangeHandler = () => {
+  #handleModeChange = () => {
     this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((pointPresenter) => pointPresenter.reset());
   };
 
-  #sortTypeChangeHandler = (sortType) => {
+  #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -187,7 +188,7 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
-  #actionViewChangeHandler = async (actionType, updateType, update) => {
+  #handleActionViewChange = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
     switch (actionType) {
       case EditingType.UPDATE_POINT:
@@ -221,7 +222,7 @@ export default class TripPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #modelEventHandler = (updateType, data) => {
+  #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenter.get(data.id).init(data);
@@ -232,16 +233,14 @@ export default class TripPresenter {
         break;
       case UpdateType.MINOR:
         this.#clearTripInfo();
-        this.#renderTripinfo();
+        this.#renderTripInfo();
         this.#clearTrip();
         this.#renderTrip();
         break;
       case UpdateType.INIT:
-        if (data.isError) {
-          this.#isLoadingError = data.isError;
-        }
+        this.#isLoadingError = data.isError;
         this.#isLoading = false;
-        this.#renderTripinfo();
+        this.#renderTripInfo();
         this.#clearTrip();
         this.#renderTrip();
         break;
