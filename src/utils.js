@@ -1,19 +1,10 @@
-import { SortTypes, FilterTypes } from './const';
+import { SortTypes, FilterTypes, TimePeriods } from './const';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
-
-const TimePeriods = {
-  MSEC_IN_SEC : 1000,
-  SEC_IN_MIN : 60,
-  MIN_IN_HOUR : 60,
-  HOUR_IN_DAY : 24,
-  MSEC_IN_HOUR : 60 * 60 * 1000,
-  MSEC_IN_DAY : 24 * 60 * 60 * 1000,
-};
 
 function getRandomInteger(a = 0, b = 1) {
   const lower = Math.ceil(Math.min(a, b));
