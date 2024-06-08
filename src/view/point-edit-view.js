@@ -42,6 +42,21 @@ export default class PointEditView extends AbstractStatefulView {
     });
   }
 
+  reset = (point) => this.updateElement({point});
+
+  _restoreHandlers() {
+    if (!this.#isCreating) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpPointClickHandler);
+    }
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#cancelClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
+    this.#setDatepicker();
+  }
+
   #rollUpPointClickHandler = (event) => {
     event.preventDefault();
     this.#handleRollUpPointClick();
@@ -73,22 +88,7 @@ export default class PointEditView extends AbstractStatefulView {
     return point;
   }
 
-  reset = (point) => this.updateElement({point});
-
-  _restoreHandlers() {
-    if (!this.#isCreating) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpPointClickHandler);
-    }
-    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#cancelClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeTypeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#changePriceHandler);
-    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#changeOffersHandler);
-    this.#setDatepicker();
-  }
-
-  #changeTypeHandler = (event) => {
+  #typeChangeHandler = (event) => {
     event.preventDefault();
     this.updateElement({
       point: {
@@ -99,7 +99,7 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #changeDestinationHandler = (event) => {
+  #destinationChangeHandler = (event) => {
     const currentDestination = this.#destinations.find((destination) => destination.name === event.target.value);
     this.updateElement({
       point: {
@@ -109,7 +109,7 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #changePriceHandler = (event) => {
+  #priceChangeHandler = (event) => {
     this._setState({
       point: {
         ...this._state.point,
@@ -118,7 +118,7 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #changeOffersHandler = () => {
+  #offersChangeHandler = () => {
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
     this._setState({
       point: {
