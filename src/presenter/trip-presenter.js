@@ -2,7 +2,7 @@ import { render, RenderPosition, remove } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import TripEventsView from '../view/trip-events-view.js';
 import SortView from '../view/sort-view.js';
-import EventPresenter from './point-presenter.js';
+import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import TripInfoPresenter from './trip-info-presenter.js';
 import MessageView from '../view/empty-point-list-view.js';
@@ -149,7 +149,7 @@ export default class TripPresenter {
   }
 
   #renderEvent(event) {
-    const eventPresenter = new EventPresenter({
+    const PointPresenter = new PointPresenter({
       eventListContainer: this.#eventListComponent,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
@@ -157,8 +157,8 @@ export default class TripPresenter {
       onModeChange: this.#handleModeChange,
     });
 
-    eventPresenter.init(event);
-    this.#eventPresenters.set(event.id, eventPresenter);
+    PointPresenter.init(event);
+    this.#eventPresenters.set(event.id, PointPresenter);
   }
 
   #clearTripInfo = () => {

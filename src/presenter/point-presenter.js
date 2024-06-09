@@ -5,7 +5,7 @@ import PointEditView from '../view/point-edit-view.js';
 import { EditingType, UpdateType, Mode } from '../const.js';
 import { isBigDifference } from '../utils/event.js';
 
-export default class EventPresenter {
+export default class PointPresenter {
   #pointListContainer = null;
   #destinationsModel = null;
   #offersModel = null;
