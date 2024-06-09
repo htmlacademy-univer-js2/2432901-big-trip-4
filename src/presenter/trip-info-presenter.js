@@ -2,7 +2,7 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import TripInfoView from '../view/trip-info-view.js';
 
 export default class TripInfoPresenter {
-  #events = null;
+  #points = null;
   #tripInfoComponent = null;
   #tripInfoContainer = null;
   #destinationsModel = null;
@@ -18,14 +18,14 @@ export default class TripInfoPresenter {
   }
 
   init(events) {
-    this.#events = events;
+    this.#points = events;
     this.#destinations = [...this.#destinationsModel.get()];
     this.#offers = [...this.#offersModel.get()];
 
     this.#tripInfoComponent = new TripInfoView({
       destinations: this.#destinations,
       offers: this.#offers,
-      events: this.#events
+      events: this.#points
     });
 
     render(this.#tripInfoComponent, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
