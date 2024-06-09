@@ -1,17 +1,19 @@
-import { RenderPosition, remove, render } from '../framework/render';
-import { UpdateType, EditingType } from '../const';
-import { isEscapeButton } from '../utils';
-import PointEditView from '../view/point-edit-view';
-export default class NewPointPresenter {
-  #container = null;
+import { remove, render, RenderPosition } from '../framework/render.js';
+import PointEditView from '../view/point-edit-view.js';
+import { EditingType, UpdateType, EditType } from '../const.js';
+import { isEscapeKey } from '../utils/common.js';
+
+export default class NewEventPresenter {
+  #eventListContainer = null;
   #destinationsModel = null;
   #offersModel = null;
-  #pointEditComponent = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
-  constructor({ container, destinationsModel, offersModel, onDataChange, onDestroy }) {
-    this.#container = container;
+  #eventEditComponent = null;
+
+  constructor({eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy}) {
+    this.#eventListContainer = eventListContainer;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onDataChange;
@@ -19,64 +21,70 @@ export default class NewPointPresenter {
   }
 
   init() {
-    if (this.#pointEditComponent !== null) {
+    if (this.#eventEditComponent !== null) {
       return;
     }
-    this.#pointEditComponent = new PointEditView({
-      destinations: this.#destinationsModel.destinations,
-      pointOffers: this.#offersModel.offers,
-      isCreating: true,
-      onRollUpPointClick: this.#handleCancelClick,
-      onFormSubmit: this.#handleFormSubmit,
-      onCancelFormClick: this.#handleCancelClick
+
+    this.#eventEditComponent = new PointEditView({
+      eventDestination: this.#destinationsModel.get(),
+      eventOffers: this.#offersModel.get(),
+      onEditSubmit: this.#handleEditSubmit,
+      onEditReset: this.#handleResetClick,
+      eventType: EditType.CREATING
     });
-    render(this.#pointEditComponent, this.#container.element, RenderPosition.AFTERBEGIN);
-    document.addEventListener('keydown', this.#handleEscKeyDown);
+
+    render(this.#eventEditComponent, this.#eventListContainer.element, RenderPosition.AFTERBEGIN);
+
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#pointEditComponent === null) {
+    if (this.#eventEditComponent === null) {
       return;
     }
-    remove(this.#pointEditComponent);
-    this.#pointEditComponent = null;
-    document.removeEventListener('keydown', this.#handleEscKeyDown);
+
     this.#handleDestroy();
+
+    remove(this.#eventEditComponent);
+    this.#eventEditComponent = null;
+
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
-    this.#pointEditComponent.updateElement({
-      isActive: false,
-      isSaving: true
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
     });
   }
 
   setAborting() {
     const resetFormState = () => {
-      this.#pointEditComponent.updateElement({
-        isActive: true,
+      this.#eventEditComponent.updateElement({
+        isDisabled: false,
         isSaving: false,
-        isDeleting: false
+        isDeleting: false,
       });
     };
-    this.#pointEditComponent.shake(resetFormState);
+
+    this.#eventEditComponent.shake(resetFormState);
   }
 
-  #handleFormSubmit = (point) => {
+  #handleEditSubmit = (event) => {
     this.#handleDataChange(
       EditingType.ADD_POINT,
       UpdateType.MINOR,
-      point
+      event,
     );
   };
 
-  #handleCancelClick = () => {
+  #handleResetClick = () => {
     this.destroy();
   };
 
-  #handleEscKeyDown = (event) => {
-    if (isEscapeButton(event)) {
-      event.preventDefault();
+  #escKeyDownHandler = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
       this.destroy();
     }
   };

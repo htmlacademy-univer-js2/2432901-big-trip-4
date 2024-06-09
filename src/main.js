@@ -8,48 +8,59 @@ import DestinationsModel from './model/destinations-model.js';
 import FiltersModel from './model/filters-model.js';
 import NewPointView from './view/new-point-view.js';
 
-const AUTHORIZATION = 'Basic anjcdbh57ybf8u';
+const AUTHORIZATION = 'Basic bshfiebs34';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
-const mainElement = document.querySelector('.page-main');
-const tripInfoElement = document.querySelector('.trip-main');
-const filterElement = tripInfoElement.querySelector('.trip-controls__filters');
-const eventListElement = mainElement.querySelector('.trip-events');
+const tripMainContainer = document.querySelector('.trip-main');
+const filterContainer = document.querySelector('.trip-controls__filters');
+const tripEventsContainer = document.querySelector('.trip-events');
 
 const apiService = new PointsApiService(END_POINT, AUTHORIZATION);
-const destinationsModel = new DestinationsModel(apiService);
-const filtersModel = new FiltersModel();
-const offersModel = new OffersModel(apiService);
-const pointsModel = new PointsModel({apiService, destinationsModel, offersModel});
 
-const tripPresenter = new TripPresenter({
-  container: eventListElement,
-  tripInfoContainer: tripInfoElement,
-  offersModel,
-  pointsModel,
+const filtersModel = new FiltersModel();
+const destinationsModel = new DestinationsModel(apiService);
+const offersModel = new OffersModel(apiService);
+const eventsModel = new PointsModel({
+  apiService,
   destinationsModel,
-  filtersModel,
-  onNewPointDestroy: handleNewPointFormCancel
+  offersModel
 });
 
-const filterPresenter = new FilterPresenter({container: filterElement, pointsModel, filtersModel});
-
 const newPointComponent = new NewPointView({
-  onClick: handleNewPointClick
+  onClick: handleNewEventButtonClick
+});
+
+function handleNewEventClick() {
+  newPointComponent.element.disabled = true;
+}
+
+const tripPresenter = new TripPresenter({
+  tripInfoContainer: tripMainContainer,
+  tripEventsContainer,
+  destinationsModel,
+  offersModel,
+  eventsModel,
+  filtersModel,
+  onNewPointDestroy: handleNewPointFormCancel,
+  onNewEventClick: handleNewEventClick,
+});
+
+const filterPresenter = new FilterPresenter({
+  filterContainer: filterContainer,
+  filtersModel,
+  eventsModel
 });
 
 function handleNewPointFormCancel() {
   newPointComponent.element.disabled = false;
 }
 
-function handleNewPointClick() {
-  tripPresenter.createPoint();
-  newPointComponent.element.disabled = true;
+function handleNewEventButtonClick() {
+  tripPresenter.createEvent();
+  handleNewEventClick();
 }
 
-render(newPointComponent, tripInfoElement, RenderPosition.BEFOREEND);
-
+render(newPointComponent, tripMainContainer, RenderPosition.BEFOREEND);
 filterPresenter.init();
-pointsModel.init();
 tripPresenter.init();
-
+eventsModel.init();
