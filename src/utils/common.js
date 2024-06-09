@@ -1,4 +1,4 @@
-const isEscapeKey = (evt) => evt.key === 'Escape';
+const isEscapeButton = (evt) => evt.key === 'Escape';
 
 function firstLetterToUpperCase(type) {
   return type.charAt(0).toUpperCase() + type.slice(1);
@@ -12,8 +12,4 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {
-  firstLetterToUpperCase,
-  firstLetterToLowerCase,
-  updateItem,
-  isEscapeKey};
+export { firstLetterToUpperCase, firstLetterToLowerCase, updateItem, isEscapeButton };

@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render.js';
-import { isEscapeKey } from '../utils/common.js';
+import { isEscapeButton } from '../utils/common.js';
 import EventView from '../view/point-view.js';
 import PointEditView from '../view/point-edit-view.js';
 import { EditingType, UpdateType, Mode } from '../const.js';
@@ -157,7 +157,7 @@ export default class EventPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (isEscapeKey(evt)) {
+    if (isEscapeButton(evt)) {
       evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
       this.#replaceEditorToEvent();

@@ -40,12 +40,4 @@ function isBigDifference(pointA, pointB) {
   return pointA.dateFrom !== pointB.dateFrom || pointA.price !== pointB.price || sortByTime(pointA, pointB) !== 0;
 }
 
-export {
-  formatStringToDateTime,
-  formatStringToShortDate,
-  formatStringToTime,
-  getPointDuration,
-  sortByDay,
-  sortByTime,
-  sortByPrice,
-  isBigDifference};
+export { formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration, sortByDay, sortByTime, sortByPrice, isBigDifference };

@@ -5,21 +5,21 @@ import { createTripInfoTemplate } from '../templates/trip-info-template.js';
 export default class TripInfoView extends AbstractView {
   #destinations = null;
   #offers = null;
-  #events = 0;
+  #points = 0;
 
   constructor({destinations, offers, events}) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#events = events;
+    this.#points = events;
   }
 
   get template() {
     return createTripInfoTemplate({
-      isEmpty: this.#events.length === 0,
-      title: getTripInfoTitle(this.#events, this.#destinations),
-      duration: getTripInfoDuration(this.#events),
-      cost: getTotalTripCost(this.#events, this.#offers),
+      isEmpty: this.#points.length === 0,
+      title: getTripInfoTitle(this.#points, this.#destinations),
+      duration: getTripInfoDuration(this.#points),
+      cost: getTotalTripCost(this.#points, this.#offers),
     });
   }
 }

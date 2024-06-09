@@ -2,7 +2,7 @@ import he from 'he';
 import { firstLetterToUpperCase } from '../utils/common.js';
 import { formatStringToDateTime, formatStringToShortDate, formatStringToTime, getPointDuration } from '../utils/event.js';
 
-function createCheckedOffersElement(offers, checkedOffers) {
+function createPointOffersTemplate(offers, checkedOffers) {
   const offerItem = offers.map((offer) => checkedOffers.includes(offer.id) ? `
     <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
@@ -36,7 +36,7 @@ export function createPointTemplate({event, eventDestination, eventOffers}) {
           &euro;&nbsp;<span class="event__price-value">${he.encode(String(price))}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        ${createCheckedOffersElement(eventOffers.offers, offers)}
+        ${createPointOffersTemplate(eventOffers.offers, offers)}
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

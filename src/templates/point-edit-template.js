@@ -3,7 +3,7 @@ import { EditType, ButtonText } from '../const.js';
 import { firstLetterToUpperCase, firstLetterToLowerCase } from '../utils/common.js';
 import { formatStringToDateTime } from '../utils/event.js';
 
-function createEventTypesListElement(eventOffers, currentType, isDisabled) {
+function createPointTypesListTemplate(eventOffers, currentType, isDisabled) {
   return eventOffers.map((event) =>
     `<div class="event__type-item">
       <input id="event-type-${event.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event.type}" ${currentType === event.type ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
@@ -69,7 +69,7 @@ export function createPointEditTemplate({event, eventDestination, eventOffers, e
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${createEventTypesListElement(eventOffers, type, isDisabled)}
+                ${createPointTypesListTemplate(eventOffers, type, isDisabled)}
               </fieldset>
             </div>
           </div>
