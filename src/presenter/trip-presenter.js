@@ -13,7 +13,7 @@ import { filter } from '../utils/filter.js';
 export default class TripPresenter {
   #eventListComponent = new TripEventsView();
   #sortComponent = null;
-  #noEventComponent = null;
+  #emptyPointComponent = null;
 
   #tripInfoContainer = null;
   #tripEventsContainer = null;
@@ -125,13 +125,13 @@ export default class TripPresenter {
   }
 
   #renderMessage({isLoading = false, isLoadingError = false} = {}) {
-    this.#noEventComponent = new MessageView({
+    this.#emptyPointComponent = new MessageView({
       filterType: this.#filterType,
       isLoading,
       isLoadingError,
     });
 
-    render(this.#noEventComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
+    render(this.#emptyPointComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripInfo = () => {
@@ -172,8 +172,8 @@ export default class TripPresenter {
 
     remove(this.#sortComponent);
 
-    if (this.#noEventComponent) {
-      remove(this.#noEventComponent);
+    if (this.#emptyPointComponent) {
+      remove(this.#emptyPointComponent);
     }
 
     if (resetSortType) {
