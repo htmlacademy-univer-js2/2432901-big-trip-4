@@ -14,8 +14,6 @@ export default class TripPresenter {
   #container = null;
   #tripInfoContainer = null;
 
-  #points = [];
-
   #offersModel = null;
   #pointsModel = null;
   #destinationsModel = null;
@@ -34,13 +32,14 @@ export default class TripPresenter {
 
   #isLoading = true;
   #isLoadingError = false;
+  #isCreating = null;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({container, tripInfoContainer, offersModel, pointsModel, destinationsModel, filtersModel, onNewPointDestroy}) {
+  constructor({container, tripInfoContainer, offersModel, pointsModel, destinationsModel, filtersModel}) {
     this.#container = container;
     this.#tripInfoContainer = tripInfoContainer;
 
@@ -54,7 +53,7 @@ export default class TripPresenter {
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onDataChange: this.#handleActionViewChange,
-      onDestroy: onNewPointDestroy
+      onDestroy: this.#newPointDestroyHandler
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -73,6 +72,13 @@ export default class TripPresenter {
     this.#renderTrip();
   }
 
+  #newPointDestroyHandler = () => {
+    this.#isCreating = false;
+    if (this.points.length === 0) {
+      this.#handleModelEvent(UpdateType.MINOR);
+    }
+  };
+
   #renderTrip() {
     if (this.#isLoading) {
       this.#renderEmptyPointListView({isLoading: true});
@@ -84,7 +90,7 @@ export default class TripPresenter {
       return;
     }
 
-    if (this.points.length === 0) {
+    if (this.points.length === 0 && !this.#isCreating) {
       this.#renderEmptyPointListView();
       return;
     }
@@ -154,9 +160,11 @@ export default class TripPresenter {
   };
 
   createPoint = () => {
+    this.#isCreating = true;
     this.#currentSortType = SortTypes.DAY;
     this.#filtersModel.set(UpdateType.MAJOR, FilterTypes.EVERYTHING);
     this.#newPointPresenter.init();
+    this.#isCreating = false;
   };
 
   #clearTrip = ({ resetSort = false } = {}) => {

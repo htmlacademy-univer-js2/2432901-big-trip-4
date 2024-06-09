@@ -1,31 +1,31 @@
-import { POINTS_TYPES, ButtonText } from '../const.js';
+import { ButtonText } from '../const.js';
 import he from 'he';
 import { getFullDate } from '../utils.js';
 
-function createPointOptionsTemplate(destinations) {
+function createPointCitiesOptionsTemplate(destinations) {
   return ( `${destinations.map((destination) => `<option value="${destination.name}"></option>`).join('')} `);
 }
 
 function createPointPhotosTemplate(destination) {
   return (
-    `<div class="event__photos-container">
+    `${destination.pictures.length ? `<div class="event__photos-container">
       <div class="event__photos-tape">
         ${destination.pictures.map((picture) =>
       `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('')}
       </div>
-    </div>`
+    </div>` : ''}`
   );
 }
 
-function createPointTypesTemplate(pointId, currentType, isActive) {
-  return POINTS_TYPES.map((type) =>
+function createPointTypesTemplate(pointId, pointOffers, currentType, isActive) {
+  return pointOffers.map((offer) =>
     `<div class="event__type-item">
-          <input id="event-type-${type}-${pointId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''} ${isActive ? '' : 'disabled'}>
-          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${pointId}" ${currentType === type ? 'checked' : ''}>${type[0].toUpperCase() + type.slice(1)}</label>
+          <input id="event-type-${offer.type}-${pointId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}" ${currentType === offer.type ? 'checked' : ''} ${isActive ? '' : 'disabled'}>
+          <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-${pointId}" ${currentType === offer.type ? 'checked' : ''}>${offer.type[0].toUpperCase() + offer.type.slice(1)}</label>
       </div>`).join('');
 }
 
-function createOffersTemplate(offers, selectedOffers, isActive) {
+function createPointOffersTemplate(offers, selectedOffers, isActive) {
   const offerItems = offers.offers.map((offer) => {
     const offerName = offer.title.replace(' ', '').toLowerCase();
     return (`<div class="event__offer-selector">
@@ -37,17 +37,21 @@ function createOffersTemplate(offers, selectedOffers, isActive) {
                 </label>
             </div>`);
   }).join('');
-  return `<div class="event__available-offers">${offerItems}</div>`;
+
+  return `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">${offerItems}</div>
+    </section>`;
 }
 
 function createDestinationTemplate( destination ) {
-  return destination.description.length && destination.pictures.length ? `<section class="event__section  event__section--destination" >
+  return destination.description.length && destination.pictures.length ? `
+  <section class="event__section  event__section--destination" >
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    ${destination.description.length ? `<p class="event__destination-description">${destination.description}</p>` : ''}
+    ${destination.description.length ? `<p class="event__destination-description">${destination.description}</p>` : 'No pictures destination description'}
     ${destination.pictures.length ? createPointPhotosTemplate(destination) : ''}
   </section>` : '';
 }
-
 function createButtonTemplate(isCreating, isActive, isDeleting) {
   let text;
   if (isCreating) {
@@ -65,7 +69,6 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
   const currentDestination = destinations.find((destination) => destination.id === point.destination);
   const currentOffers = pointOffers.find((offer) => offer.type === type);
   const destinationName = (currentDestination) ? currentDestination.name : '';
-
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -79,7 +82,7 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${createPointTypesTemplate(id, type, isActive)}
+              ${createPointTypesTemplate(id, pointOffers, type, isActive)}
             </fieldset>
           </div>
         </div>
@@ -89,7 +92,7 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
           </label>
           <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${he.encode(destinationName)}" list="destination-list-${id}" ${isActive ? '' : 'disabled'}>
           <datalist id="destination-list-${id}"/>
-            ${createPointOptionsTemplate(destinations)}
+            ${createPointCitiesOptionsTemplate(destinations)}
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
@@ -112,15 +115,11 @@ export function createPointEditTemplate({ state, destinations, pointOffers, isCr
           <span class="visually-hidden">Open event</span>
         </button>`}
       </header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          ${createOffersTemplate(currentOffers, offers, isActive)}
-        </section>
-        ${currentDestination ? `<section class="event__section  event__section--destination">
-          ${createDestinationTemplate(currentDestination)}
-        </section>` : ''}
-      </section>
+      ${currentOffers || (currentDestination && (currentDestination.description.length || currentDestination.pictures.length)) ?
+      `<section class="event__details">
+        ${currentOffers.offers.length !== 0 ? createPointOffersTemplate(currentOffers, offers, isActive) : ''}
+        ${currentDestination ? createDestinationTemplate(currentDestination) : ''}
+      </section>` : ''}
     </form>
   </li>`);
 }
