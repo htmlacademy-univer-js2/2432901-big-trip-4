@@ -20,7 +20,7 @@ const apiService = new PointsApiService(END_POINT, AUTHORIZATION);
 const filtersModel = new FiltersModel();
 const destinationsModel = new DestinationsModel(apiService);
 const offersModel = new OffersModel(apiService);
-const eventsModel = new PointsModel({
+const pointsModel = new PointsModel({
   apiService,
   destinationsModel,
   offersModel
@@ -39,7 +39,7 @@ const tripPresenter = new TripPresenter({
   tripEventsContainer,
   destinationsModel,
   offersModel,
-  eventsModel,
+  pointsModel,
   filtersModel,
   onNewPointDestroy: handleNewPointFormCancel,
   onNewEventClick: handleNewEventClick,
@@ -48,7 +48,7 @@ const tripPresenter = new TripPresenter({
 const filterPresenter = new FilterPresenter({
   filterContainer: filterContainer,
   filtersModel,
-  eventsModel
+  pointsModel
 });
 
 function handleNewPointFormCancel() {
@@ -63,4 +63,4 @@ function handleNewEventButtonClick() {
 render(newPointComponent, tripMainContainer, RenderPosition.BEFOREEND);
 filterPresenter.init();
 tripPresenter.init();
-eventsModel.init();
+pointsModel.init();

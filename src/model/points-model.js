@@ -58,9 +58,9 @@ export default class PointsModel extends Observable {
     }
   }
 
-  async deleteEvent(updateType, update) {
+  async remove(updateType, update) {
     try {
-      await this.#apiService.deleteEvent(update);
+      await this.#apiService.remove(update);
       this.#points = this.#points.filter((eventItem) => eventItem.id !== update.id);
       this._notify(updateType);
     } catch(err) {
