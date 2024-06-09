@@ -5,7 +5,7 @@ import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import TripInfoPresenter from './trip-info-presenter.js';
-import MessageView from '../view/empty-point-list-view.js';
+import EmptyPointListView from '../view/empty-point-list-view.js';
 import { SortType, EditingType, UpdateType, FilterType, TimeLimit } from '../const.js';
 import { sort } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
@@ -125,7 +125,7 @@ export default class TripPresenter {
   }
 
   #renderMessage({isLoading = false, isLoadingError = false} = {}) {
-    this.#emptyPointComponent = new MessageView({
+    this.#emptyPointComponent = new EmptyPointListView({
       filterType: this.#filterType,
       isLoading,
       isLoadingError,

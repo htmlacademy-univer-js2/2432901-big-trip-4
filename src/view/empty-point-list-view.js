@@ -3,7 +3,7 @@ import { createLoadingTemplate } from '../templates/loading-template.js';
 import { createFailedLoadingTemplate } from '../templates/failed-loading-template.js';
 import { createMessageTemplate } from '../templates/message-template.js';
 
-export default class MessageView extends AbstractView {
+export default class EmptyPointListView extends AbstractView {
   #filterType = null;
   #isLoading = false;
   #isLoadingError = false;
