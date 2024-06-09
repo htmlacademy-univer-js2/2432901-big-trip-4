@@ -32,7 +32,4 @@ function adaptToServer(event) {
   return adaptedEvent;
 }
 
-export {
-  adaptToClient,
-  adaptToServer
-};
+export { adaptToClient, adaptToServer };
