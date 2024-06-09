@@ -15,9 +15,9 @@ function isPointFuture(event) {
 
 const filter = {
   [FilterType.EVERYTHING]: (events) => [...events],
-  [FilterType.PAST]: (events) => events.filter((event) => isPointPast(event)),
-  [FilterType.PRESENT]: (events) => events.filter((event) => isPointPresent(event)),
   [FilterType.FUTURE]: (events) => events.filter((event) => isPointFuture(event)),
+  [FilterType.PRESENT]: (events) => events.filter((event) => isPointPresent(event)),
+  [FilterType.PAST]: (events) => events.filter((event) => isPointPast(event)),
 };
 
 const EmptyPointListText = {
