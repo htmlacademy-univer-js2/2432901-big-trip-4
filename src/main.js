@@ -8,7 +8,7 @@ import DestinationsModel from './model/destinations-model.js';
 import FiltersModel from './model/filters-model.js';
 import NewPointView from './view/new-point-view.js';
 
-const AUTHORIZATION = 'Basic vsdegbjdfe3';
+const AUTHORIZATION = 'Basic anjcdbh57ybf8u';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const mainElement = document.querySelector('.page-main');
@@ -29,7 +29,7 @@ const tripPresenter = new TripPresenter({
   pointsModel,
   destinationsModel,
   filtersModel,
-  onNewPointDestroy: handleNewPointFormCancel,
+  onNewPointDestroy: handleNewPointFormCancel
 });
 
 const filterPresenter = new FilterPresenter({container: filterElement, pointsModel, filtersModel});
@@ -50,7 +50,6 @@ function handleNewPointClick() {
 render(newPointComponent, tripInfoElement, RenderPosition.BEFOREEND);
 
 filterPresenter.init();
-tripPresenter.init();
 pointsModel.init();
-
+tripPresenter.init();
 

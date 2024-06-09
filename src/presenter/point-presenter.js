@@ -94,14 +94,17 @@ export default class PointPresenter {
   }
 
   setAborting() {
-    const resetFormState = () => {
-      this.#pointEditComponent.updateElement({
-        isActive: true,
-        isSaving: false,
-        isDeleting: false
-      });
-    };
-    this.#pointEditComponent.shake(resetFormState);
+    if (this.#mode === PointMode.EDIT) {
+      const resetFormState = () => {
+        this.#pointEditComponent.updateElement({
+          isActive: true,
+          isSaving: false,
+          isDeleting: false
+        });
+      };this.#pointEditComponent.shake(resetFormState);
+    } else {
+      this.#pointEditComponent.shake();
+    }
   }
 
   #replacePointToForm = () => {
@@ -130,8 +133,10 @@ export default class PointPresenter {
   };
 
   #handleFormRollUpClick = () => {
-    this.#pointEditComponent.reset(this.#point);
-    this.#replaceFormToPoint();
+    if (!this.#pointEditComponent.isActive) {
+      this.#pointEditComponent.reset(this.#point);
+      this.#replaceFormToPoint();
+    }
   };
 
   #handleFormSubmit = (updatePoint) => {
