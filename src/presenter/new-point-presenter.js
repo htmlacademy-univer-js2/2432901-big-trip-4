@@ -3,14 +3,14 @@ import PointEditView from '../view/point-edit-view.js';
 import { EditingType, UpdateType, EditType } from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 
-export default class NewEventPresenter {
+export default class NewPointPresenter {
   #eventListContainer = null;
   #destinationsModel = null;
   #offersModel = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
-  #eventEditComponent = null;
+  #pointEditComponent = null;
 
   constructor({eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy}) {
     this.#eventListContainer = eventListContainer;
@@ -21,11 +21,11 @@ export default class NewEventPresenter {
   }
 
   init() {
-    if (this.#eventEditComponent !== null) {
+    if (this.#pointEditComponent !== null) {
       return;
     }
 
-    this.#eventEditComponent = new PointEditView({
+    this.#pointEditComponent = new PointEditView({
       eventDestination: this.#destinationsModel.get(),
       eventOffers: this.#offersModel.get(),
       onEditSubmit: this.#handleEditSubmit,
@@ -33,26 +33,26 @@ export default class NewEventPresenter {
       eventType: EditType.CREATING
     });
 
-    render(this.#eventEditComponent, this.#eventListContainer.element, RenderPosition.AFTERBEGIN);
+    render(this.#pointEditComponent, this.#eventListContainer.element, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#eventEditComponent === null) {
+    if (this.#pointEditComponent === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#eventEditComponent);
-    this.#eventEditComponent = null;
+    remove(this.#pointEditComponent);
+    this.#pointEditComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
-    this.#eventEditComponent.updateElement({
+    this.#pointEditComponent.updateElement({
       isDisabled: true,
       isSaving: true,
     });
@@ -60,14 +60,14 @@ export default class NewEventPresenter {
 
   setAborting() {
     const resetFormState = () => {
-      this.#eventEditComponent.updateElement({
+      this.#pointEditComponent.updateElement({
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
       });
     };
 
-    this.#eventEditComponent.shake(resetFormState);
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #handleEditSubmit = (event) => {

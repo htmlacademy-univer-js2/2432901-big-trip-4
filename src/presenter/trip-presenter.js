@@ -3,7 +3,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import TripEventsView from '../view/trip-events-view.js';
 import SortView from '../view/sort-view.js';
 import EventPresenter from './point-presenter.js';
-import NewEventPresenter from './new-point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
 import TripInfoPresenter from './trip-info-presenter.js';
 import MessageView from '../view/empty-point-list-view.js';
 import { SortType, EditingType, UpdateType, FilterType, TimeLimit } from '../const.js';
@@ -19,13 +19,13 @@ export default class TripPresenter {
   #tripEventsContainer = null;
   #destinationsModel = null;
   #offersModel = null;
-  #eventsModel = null;
+  #pointsModel = null;
   #filtersModel = null;
   #handleNewEventClick = null;
   #handleNewEventDestroy = null;
 
   #eventPresenters = new Map();
-  #newEventPresenter = null;
+  #newPointPresenter = null;
   #tripInfoPresenter = null;
   #filterType = FilterType.EVERYTHING;
   #currentSortType = SortType.DAY;
@@ -38,17 +38,17 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripInfoContainer, tripEventsContainer, destinationsModel, offersModel, eventsModel, filtersModel, onNewPointDestroy, onNewEventClick}) {
+  constructor({tripInfoContainer, tripEventsContainer, destinationsModel, offersModel, pointsModel, filtersModel, onNewPointDestroy, onNewEventClick}) {
     this.#tripInfoContainer = tripInfoContainer;
     this.#tripEventsContainer = tripEventsContainer;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
-    this.#eventsModel = eventsModel;
+    this.#pointsModel = pointsModel;
     this.#filtersModel = filtersModel;
     this.#handleNewEventClick = onNewEventClick;
     this.#handleNewEventDestroy = onNewPointDestroy;
 
-    this.#newEventPresenter = new NewEventPresenter({
+    this.#newPointPresenter = new NewPointPresenter({
       eventListContainer: this.#eventListComponent,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
@@ -56,13 +56,13 @@ export default class TripPresenter {
       onDestroy: onNewPointDestroy
     });
 
-    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
     this.#filterType = this.#filtersModel.filter;
-    const events = this.#eventsModel.get();
+    const events = this.#pointsModel.get();
     const filteredEvents = filter[this.#filterType](events);
 
     return sort[this.#currentSortType](filteredEvents);
@@ -70,7 +70,7 @@ export default class TripPresenter {
 
   get eventsEverything() {
     this.#filterType = FilterType.EVERYTHING;
-    const events = this.#eventsModel.get();
+    const events = this.#pointsModel.get();
     const filteredEvents = filter[this.#filterType](events);
 
     return sort[this.#currentSortType](filteredEvents);
@@ -84,7 +84,7 @@ export default class TripPresenter {
     this.#isCreating = true;
     this.#currentSortType = SortType.DAY;
     this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newEventPresenter.init();
+    this.#newPointPresenter.init();
     this.#isCreating = false;
   }
 
@@ -166,7 +166,7 @@ export default class TripPresenter {
   };
 
   #clearTrip({ resetSortType = false} = {}) {
-    this.#newEventPresenter.destroy();
+    this.#newPointPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
 
@@ -197,23 +197,23 @@ export default class TripPresenter {
       case EditingType.UPDATE_POINT:
         this.#eventPresenters.get(update.id).setSaving();
         try {
-          await this.#eventsModel.updateEvent(updateType, update);
+          await this.#pointsModel.updateEvent(updateType, update);
         } catch(err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
         break;
       case EditingType.ADD_POINT:
-        this.#newEventPresenter.setSaving();
+        this.#newPointPresenter.setSaving();
         try {
-          await this.#eventsModel.addEvent(updateType, update);
+          await this.#pointsModel.addEvent(updateType, update);
         } catch(err) {
-          this.#newEventPresenter.setAborting();
+          this.#newPointPresenter.setAborting();
         }
         break;
       case EditingType.DELETE_POINT:
         this.#eventPresenters.get(update.id).setDeleting();
         try {
-          await this.#eventsModel.deleteEvent(updateType, update);
+          await this.#pointsModel.remove(updateType, update);
         } catch(err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
@@ -249,7 +249,7 @@ export default class TripPresenter {
   };
 
   #handleModeChange = () => {
-    this.#newEventPresenter.destroy();
+    this.#newPointPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 }
