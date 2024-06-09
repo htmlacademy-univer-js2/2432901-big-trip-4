@@ -2,7 +2,7 @@ import { render, RenderPosition, remove } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import TripEventsView from '../view/trip-events-view.js';
 import SortView from '../view/sort-view.js';
-import EventPresenter from './point-presenter.js';
+import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import TripInfoPresenter from './trip-info-presenter.js';
 import MessageView from '../view/empty-point-list-view.js';
@@ -13,7 +13,7 @@ import { filter } from '../utils/filter.js';
 export default class TripPresenter {
   #eventListComponent = new TripEventsView();
   #sortComponent = null;
-  #noEventComponent = null;
+  #emptyPointComponent = null;
 
   #tripInfoContainer = null;
   #tripEventsContainer = null;
@@ -24,7 +24,7 @@ export default class TripPresenter {
   #handleNewEventClick = null;
   #handleNewEventDestroy = null;
 
-  #eventPresenters = new Map();
+  #pointPresenters = new Map();
   #newPointPresenter = null;
   #tripInfoPresenter = null;
   #filterType = FilterType.EVERYTHING;
@@ -125,13 +125,13 @@ export default class TripPresenter {
   }
 
   #renderMessage({isLoading = false, isLoadingError = false} = {}) {
-    this.#noEventComponent = new MessageView({
+    this.#emptyPointComponent = new MessageView({
       filterType: this.#filterType,
       isLoading,
       isLoadingError,
     });
 
-    render(this.#noEventComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
+    render(this.#emptyPointComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripInfo = () => {
@@ -149,7 +149,7 @@ export default class TripPresenter {
   }
 
   #renderEvent(event) {
-    const eventPresenter = new EventPresenter({
+    const eventPresenter = new PointPresenter({
       eventListContainer: this.#eventListComponent,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
@@ -158,7 +158,7 @@ export default class TripPresenter {
     });
 
     eventPresenter.init(event);
-    this.#eventPresenters.set(event.id, eventPresenter);
+    this.#pointPresenters.set(event.id, eventPresenter);
   }
 
   #clearTripInfo = () => {
@@ -167,13 +167,13 @@ export default class TripPresenter {
 
   #clearTrip({ resetSortType = false} = {}) {
     this.#newPointPresenter.destroy();
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
 
-    if (this.#noEventComponent) {
-      remove(this.#noEventComponent);
+    if (this.#emptyPointComponent) {
+      remove(this.#emptyPointComponent);
     }
 
     if (resetSortType) {
@@ -195,11 +195,11 @@ export default class TripPresenter {
     this.#uiBlocker.block();
     switch (actionType) {
       case EditingType.UPDATE_POINT:
-        this.#eventPresenters.get(update.id).setSaving();
+        this.#pointPresenters.get(update.id).setSaving();
         try {
           await this.#pointsModel.updateEvent(updateType, update);
         } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          this.#pointPresenters.get(update.id).setAborting();
         }
         break;
       case EditingType.ADD_POINT:
@@ -211,11 +211,11 @@ export default class TripPresenter {
         }
         break;
       case EditingType.DELETE_POINT:
-        this.#eventPresenters.get(update.id).setDeleting();
+        this.#pointPresenters.get(update.id).setDeleting();
         try {
           await this.#pointsModel.remove(updateType, update);
         } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          this.#pointPresenters.get(update.id).setAborting();
         }
         break;
     }
@@ -225,7 +225,7 @@ export default class TripPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#eventPresenters.get(data.id).init(data);
+        this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearTrip();
@@ -250,6 +250,6 @@ export default class TripPresenter {
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
-    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 }

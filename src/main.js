@@ -8,7 +8,7 @@ import DestinationsModel from './model/destinations-model.js';
 import FiltersModel from './model/filters-model.js';
 import NewPointView from './view/new-point-view.js';
 
-const AUTHORIZATION = 'Basic bshfiebs34';
+const AUTHORIZATION = 'Basic nbchrfbh6';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const tripMainContainer = document.querySelector('.trip-main');
