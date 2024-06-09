@@ -24,7 +24,7 @@ export default class TripPresenter {
   #handleNewEventClick = null;
   #handleNewEventDestroy = null;
 
-  #eventPresenters = new Map();
+  #pointPresenters = new Map();
   #newPointPresenter = null;
   #tripInfoPresenter = null;
   #filterType = FilterType.EVERYTHING;
@@ -149,7 +149,7 @@ export default class TripPresenter {
   }
 
   #renderEvent(event) {
-    const PointPresenter = new PointPresenter({
+    const eventPresenter = new PointPresenter({
       eventListContainer: this.#eventListComponent,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
@@ -157,8 +157,8 @@ export default class TripPresenter {
       onModeChange: this.#handleModeChange,
     });
 
-    PointPresenter.init(event);
-    this.#eventPresenters.set(event.id, PointPresenter);
+    eventPresenter.init(event);
+    this.#pointPresenters.set(event.id, eventPresenter);
   }
 
   #clearTripInfo = () => {
@@ -167,8 +167,8 @@ export default class TripPresenter {
 
   #clearTrip({ resetSortType = false} = {}) {
     this.#newPointPresenter.destroy();
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
 
@@ -195,11 +195,11 @@ export default class TripPresenter {
     this.#uiBlocker.block();
     switch (actionType) {
       case EditingType.UPDATE_POINT:
-        this.#eventPresenters.get(update.id).setSaving();
+        this.#pointPresenters.get(update.id).setSaving();
         try {
           await this.#pointsModel.updateEvent(updateType, update);
         } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          this.#pointPresenters.get(update.id).setAborting();
         }
         break;
       case EditingType.ADD_POINT:
@@ -211,11 +211,11 @@ export default class TripPresenter {
         }
         break;
       case EditingType.DELETE_POINT:
-        this.#eventPresenters.get(update.id).setDeleting();
+        this.#pointPresenters.get(update.id).setDeleting();
         try {
           await this.#pointsModel.remove(updateType, update);
         } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          this.#pointPresenters.get(update.id).setAborting();
         }
         break;
     }
@@ -225,7 +225,7 @@ export default class TripPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#eventPresenters.get(data.id).init(data);
+        this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearTrip();
@@ -250,6 +250,6 @@ export default class TripPresenter {
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
-    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 }
