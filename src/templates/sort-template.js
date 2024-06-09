@@ -1,10 +1,17 @@
-export function createSortTemplate(sortTypes, currentSortType) {
-  return (`<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${sortTypes.map(({ type, active }) => `
-        <div class="trip-sort__item  trip-sort__item--${type}">
-          <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${type}" ${active !== -1 ? '' : 'disabled'} ${currentSortType === type ? 'checked' : ''}>
-          <label class="trip-sort__btn" for="sort-${type}">${type}</label>
-        </div>`).join('')}
-    </form>`
-  );
+import { SortType } from '../const.js';
+import { firstLetterToUpperCase } from '../utils/common.js';
+
+function createSortItemTemplate(currentSortType) {
+  return Object.values(SortType).map((type) =>
+    `<div class="trip-sort__item  trip-sort__item--${type}" >
+      <input id="sort-${type}" class="trip-sort__input  visually-hidden" data-sort-type="${type}" type="radio" name="trip-sort" value="sort-${type}" ${currentSortType === type ? 'checked' : ''} ${type === 'event' || type === 'offer' ? 'disabled' : ''}>
+      <label class="trip-sort__btn" for="sort-${type}">${firstLetterToUpperCase(type)}</label>
+    </div>`).join('');
+}
+
+export function createSortTemplate(currentSortType) {
+  return `
+    <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+      ${createSortItemTemplate(currentSortType)}
+    </form>`;
 }

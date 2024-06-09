@@ -1,6 +1,5 @@
-import AbstractView from '../framework/view/abstract-view';
-import { createNewPointTemplate } from '../templates/new-point-template';
-
+import AbstractView from '../framework/view/abstract-view.js';
+import { createNewPointButtonTemplate } from '../templates/new-point-template.js';
 export default class NewPointView extends AbstractView {
   #handleClick = null;
 
@@ -11,11 +10,11 @@ export default class NewPointView extends AbstractView {
   }
 
   get template() {
-    return createNewPointTemplate();
+    return createNewPointButtonTemplate();
   }
 
-  #clickHandler = (event) => {
-    event.preventDefault();
+  #clickHandler = (evt) => {
+    evt.preventDefault();
     this.#handleClick();
   };
 }

@@ -1,14 +1,14 @@
-import AbstractView from '../framework/view/abstract-view';
-import { createEmptyPointListTemplate } from '../templates/empty-point-list-template';
-import { createLoadingTemplate } from '../templates/loading-template';
-import { createFailedLoadingTemplate } from '../templates/failed-loading-template';
+import AbstractView from '../framework/view/abstract-view.js';
+import { createLoadingTemplate } from '../templates/loading-template.js';
+import { createFailedLoadingTemplate } from '../templates/failed-loading-template.js';
+import { createMessageTemplate } from '../templates/message-template.js';
 
-export default class EmptyPointListView extends AbstractView{
+export default class MessageView extends AbstractView {
   #filterType = null;
   #isLoading = false;
   #isLoadingError = false;
 
-  constructor({filterType, isLoading, isLoadingError}) {
+  constructor({filterType, isLoading = false, isLoadingError = false}) {
     super();
     this.#filterType = filterType;
     this.#isLoading = isLoading;
@@ -19,9 +19,10 @@ export default class EmptyPointListView extends AbstractView{
     if (this.#isLoading) {
       return createLoadingTemplate();
     }
+
     if (this.#isLoadingError) {
       return createFailedLoadingTemplate();
     }
-    return createEmptyPointListTemplate(this.#filterType);
+    return createMessageTemplate(this.#filterType);
   }
 }
