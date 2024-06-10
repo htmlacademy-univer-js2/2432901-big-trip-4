@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { EmptyPoint } from '../const.js';
+import { POINT_EMPTY } from '../const.js';
 import { createPointEditViewTemplate } from '../templates/point-edit-template.js';
 
 import flatpickr from 'flatpickr';
@@ -18,7 +18,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #isCreating = false;
 
-  constructor({ point = EmptyPoint, destinations, offers, onFormSubmit, onFormReset, onFormCancel, isCreating = false }) {
+  constructor({ point = POINT_EMPTY, destinations, offers, onFormSubmit, onFormReset, onFormCancel, isCreating = false }) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;

@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import { FilterType } from '../const.js';
 
 export function createFilterTemplate({ activeFilters, selected }) {

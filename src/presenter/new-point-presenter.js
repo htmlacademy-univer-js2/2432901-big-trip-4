@@ -1,13 +1,15 @@
 import { UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework/render';
-import { isEscapeButton } from '../utils';
 import PointEditView from '../view/point-edit-view';
 
 export default class NewPointPresenter {
   #container = null;
+
   #destinationsModel = null;
   #offersModel = null;
+
   #pointEditView = null;
+
   #handleDataChange = null;
   #handleDestroy = null;
 
@@ -68,7 +70,7 @@ export default class NewPointPresenter {
 
   #formSubmitHandler = (point) => {
     this.#handleDataChange(
-      UserAction.ADD_POINT,
+      UserAction.CREATE_POINT,
       UpdateType.MINOR,
       point,
     );
@@ -79,7 +81,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (isEscapeButton(evt)) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
     }

@@ -1,7 +1,6 @@
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
-
 import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filters-model.js';
@@ -10,7 +9,7 @@ import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic gre43gt54';
+const AUTHORIZATION = 'Basic hjbnfejrnc49iufn';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);

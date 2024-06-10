@@ -27,4 +27,3 @@ export default class NewPointButtonView extends AbstractView {
     this.#handleClick();
   };
 }
-

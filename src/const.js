@@ -10,18 +10,15 @@ const POINT_TYPES = [
   'restaurant',
 ];
 
-const DEFAULT_TYPE = 'flight';
-
-const EmptyPoint = {
-  price: 0,
+const POINT_EMPTY = {
+  basePrice: 0,
   dateFrom: null,
   dateTo: null,
   destination: null,
   isFavorite: false,
   offers: [],
-  type: DEFAULT_TYPE
+  type: POINT_TYPES[5]
 };
-
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -50,9 +47,19 @@ const UpdateType = {
 };
 
 const UserAction = {
-  ADD_POINT: 'add-point',
+  CREATE_POINT: 'create-point',
   UPDATE_POINT: 'update-point',
-  DELETE_POINT: 'delete-point',
+  REMOVE_POINT: 'remove-point',
+};
+
+const PointMode = {
+  DEFAULT: 'default',
+  EDIT: 'edit',
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };
 
 const Method = {
@@ -68,24 +75,5 @@ const Url = {
   DESTINATIONS: 'destinations',
 };
 
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
+export { POINT_TYPES, POINT_EMPTY, FilterType, SortTypes, ENABLED_SORT_TYPES, UpdateType, UserAction, PointMode, TimeLimit, Method, Url };
 
-const PointMode = {
-  DEFAULT: 'default',
-  EDIT: 'edit',
-};
-
-
-const TimePeriods = {
-  MSEC_IN_SEC : 1000,
-  SEC_IN_MIN : 60,
-  MIN_IN_HOUR : 60,
-  HOUR_IN_DAY : 24,
-  MSEC_IN_HOUR : 60 * 60 * 1000,
-  MSEC_IN_DAY : 24 * 60 * 60 * 1000,
-};
-
-export { POINT_TYPES, EmptyPoint, FilterType, SortTypes, ENABLED_SORT_TYPES, UpdateType, UserAction, Method, Url, TimeLimit, PointMode, TimePeriods };

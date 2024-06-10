@@ -1,12 +1,14 @@
 import { render, replace, remove } from '../framework/render.js';
 import { FilterType, UpdateType } from '../const.js';
-import { filterPointsByType } from '../utils.js';
+import { filterByPointType } from '../utils/filter.js';
 import FilterView from '../view/filter-view.js';
 
 export default class FilterPresenter {
   #container = null;
+
   #filterModel = null;
   #pointsModel = null;
+
   #filterView = null;
 
   constructor({ container, filterModel, pointsModel }) {
@@ -36,7 +38,7 @@ export default class FilterPresenter {
   }
 
   #getActiveFilters(points) {
-    return Object.values(FilterType).filter((type) => filterPointsByType[type](points));
+    return Object.values(FilterType).filter((type) => filterByPointType[type](points));
   }
 
   #filterTypeChangeHandler = (filterType) => {
