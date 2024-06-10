@@ -4,8 +4,7 @@ import PointListView from '../view/event-list-view.js';
 import MessageView from '../view/message-view.js';
 import PointPresenter from './point-presenter.js';
 import { ENABLED_SORT_TYPES, FilterType, SortTypes, UpdateType, UserAction, PointMode, TimeLimit } from '../const.js';
-import { sort } from '../utils/sort.js';
-import { filter } from '../utils/filter.js';
+import { sort, filter } from '../utils.js';
 import NewPointPresenter from './new-point-presenter.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
