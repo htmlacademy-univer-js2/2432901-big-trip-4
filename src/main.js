@@ -8,20 +8,20 @@ import FilterModel from './model/filters-model.js';
 import PointCreationStateModel from './model/point-creation-state-model.js';
 import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
-import TripApiService from './trip-api-service.js';
+import PointsApiService from './points-api-service.js';
 
 const AUTHORIZATION = 'Basic gre43gt54';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
-const tripApiService = new TripApiService(END_POINT, AUTHORIZATION);
+const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
 const headerTripContainer = document.querySelector('.trip-main');
 const filterContainer = headerTripContainer.querySelector('.trip-controls__filters');
 const tripContainer = document.querySelector('.trip-events');
 
-const destinationsModel = new DestinationsModel(tripApiService);
-const offersModel = new OffersModel(tripApiService);
-const pointsModel = new PointsModel(tripApiService, destinationsModel, offersModel);
+const destinationsModel = new DestinationsModel(pointsApiService);
+const offersModel = new OffersModel(pointsApiService);
+const pointsModel = new PointsModel(pointsApiService, destinationsModel, offersModel);
 
 const filterModel = new FilterModel();
 const pointCreationStateModel = new PointCreationStateModel();
