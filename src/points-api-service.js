@@ -1,11 +1,11 @@
 import ApiService from './framework/api-service';
 import { Method, Url } from './const';
 
-export default class TripApiService extends ApiService {
+export default class PointsApiService extends ApiService {
   get points() {
     return this._load({ url: Url.POINTS })
       .then(ApiService.parseResponse)
-      .then(TripApiService.#adaptPointsToClient);
+      .then(PointsApiService.#adaptPointsToClient);
   }
 
   get offers() {
@@ -22,22 +22,22 @@ export default class TripApiService extends ApiService {
     return this._load({
       url: Url.POINTS,
       method: Method.POST,
-      body: JSON.stringify(TripApiService.#adaptPointToServer(point)),
+      body: JSON.stringify(PointsApiService.#adaptPointToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     })
       .then(ApiService.parseResponse)
-      .then(TripApiService.#adaptPointToClient);
+      .then(PointsApiService.#adaptPointToClient);
   }
 
   async updatePoint(point) {
     return this._load({
       url: `${Url.POINTS}/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(TripApiService.#adaptPointToServer(point)),
+      body: JSON.stringify(PointsApiService.#adaptPointToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     })
       .then(ApiService.parseResponse)
-      .then(TripApiService.#adaptPointToClient);
+      .then(PointsApiService.#adaptPointToClient);
   }
 
   async deletePoint(point) {
@@ -82,6 +82,6 @@ export default class TripApiService extends ApiService {
   }
 
   static #adaptPointsToClient(points) {
-    return points.map((point) => TripApiService.#adaptPointToClient(point));
+    return points.map((point) => PointsApiService.#adaptPointToClient(point));
   }
 }
