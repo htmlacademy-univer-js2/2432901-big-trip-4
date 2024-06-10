@@ -1,4 +1,4 @@
-import { formatDateToDateTimeHTML, formatDateToShortDate, formatDateToTime, formatDuration } from '../utils/point.js';
+import { formatDateToDateTimeHTML, formatDateToShortDate, formatDateToTime, formatDuration } from '../utils.js';
 import he from 'he';
 
 

@@ -1,6 +1,6 @@
 import { UpdateType, UserAction, PointMode } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { isBigDifference } from '../utils/point';
+import { isBigDifference } from '../utils';
 import PointEditView from '../view/point-edit-view';
 import PointView from '../view/point-view';
 
