@@ -1,5 +1,5 @@
 import { POINT_TYPES} from '../const.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils.js';
 import he from 'he';
 
 function createOffersTemplate({ pointId, selectedOffersIds, offers, isDisabled }) {

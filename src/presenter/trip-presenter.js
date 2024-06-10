@@ -1,7 +1,6 @@
 import { remove, render, replace } from '../framework/render.js';
 import { ENABLED_SORT_TYPES, FilterType, SortTypes, UpdateType, UserAction, TimeLimit, PointMode } from '../const.js';
-import { sort } from '../utils/sort.js';
-import { filter } from '../utils/filter.js';
+import { filter, sort } from '../utils.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/event-list-view.js';
 import MessageView from '../view/message-view.js';
