@@ -1,30 +1,18 @@
-import dayjs from 'dayjs';
 import { FilterType } from '../const.js';
-
-function isPointPast(event) {
-  return dayjs().isAfter(event.dateTo);
-}
-
-function isPointPresent(event) {
-  return dayjs().isAfter(event.dateFrom) && dayjs().isBefore(event.dateTo);
-}
-
-function isPointFuture(event) {
-  return dayjs().isBefore(event.dateFrom);
-}
+import { isPointPast, isPointPresent, isPointFuture } from './point.js';
 
 const filter = {
-  [FilterType.EVERYTHING]: (events) => [...events],
-  [FilterType.FUTURE]: (events) => events.filter((event) => isPointFuture(event)),
-  [FilterType.PRESENT]: (events) => events.filter((event) => isPointPresent(event)),
-  [FilterType.PAST]: (events) => events.filter((event) => isPointPast(event)),
+  [FilterType.EVERYTHING]: (points) => [...points],
+  [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
 };
 
-const EmptyPointListText = {
-  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterType.PAST]: 'There are no past events now',
-  [FilterType.PRESENT]: 'There are no present events now',
-  [FilterType.FUTURE]: 'There are no future events now',
+const some = {
+  [FilterType.EVERYTHING]: (points) => points.length,
+  [FilterType.PAST]: (points) => points.some((point) => isPointPast(point)),
+  [FilterType.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
+  [FilterType.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
 };
 
-export {filter, EmptyPointListText};
+export { filter, some };
