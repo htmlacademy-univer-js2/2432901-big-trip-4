@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import { FilterType, UpdateType } from '../const.js';
-import { some } from '../utils/filter.js';
+import { filterPointsByType } from '../utils/filter.js';
 import FilterView from '../view/filter-view.js';
 
 export default class FilterPresenter {
@@ -36,7 +36,7 @@ export default class FilterPresenter {
   }
 
   #getActiveFilters(points) {
-    return Object.values(FilterType).filter((type) => some[type](points));
+    return Object.values(FilterType).filter((type) => filterPointsByType[type](points));
   }
 
   #filterTypeChangeHandler = (filterType) => {

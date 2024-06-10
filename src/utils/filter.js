@@ -8,11 +8,11 @@ const filter = {
   [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
 };
 
-const some = {
+const filterPointsByType = {
   [FilterType.EVERYTHING]: (points) => points.length,
   [FilterType.PAST]: (points) => points.some((point) => isPointPast(point)),
   [FilterType.PRESENT]: (points) => points.some((point) => isPointPresent(point)),
   [FilterType.FUTURE]: (points) => points.some((point) => isPointFuture(point)),
 };
 
-export { filter, some };
+export { filter, filterPointsByType };
