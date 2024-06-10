@@ -2,6 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { createSortTemplate } from '../templates/sort-template.js';
 
 export default class SortView extends AbstractView {
+
   #types = null;
   #selected = null;
   #handleTypeChange = null;
@@ -23,5 +24,3 @@ export default class SortView extends AbstractView {
     this.#handleTypeChange(evt.target.dataset.sortType);
   };
 }
-
-

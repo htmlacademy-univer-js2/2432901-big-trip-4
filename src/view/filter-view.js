@@ -23,4 +23,3 @@ export default class FilterView extends AbstractView {
     return createFilterTemplate({ activeFilters: this.#activeFilters, selected: this.#selected });
   }
 }
-

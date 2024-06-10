@@ -1,11 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { createPointViewTemplate } from '../templates/point-template.js';
-
 export default class PointView extends AbstractView {
   #point = null;
   #destination = null;
   #offers = null;
-
   #handleEditClick = null;
   #handleFavoriteClick = null;
 

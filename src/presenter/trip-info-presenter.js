@@ -1,13 +1,15 @@
 import { SortTypes } from '../const';
 import { render, replace, remove, RenderPosition } from '../framework/render';
-import { sort } from '../utils';
+import { sort } from '../utils/sort';
 import TripInfoView from '../view/trip-info-view';
 
 export default class TripInfoPresenter {
   #container = null;
-  #pointsModel = null;
+
   #destinationsModel = null;
+  #pointsModel = null;
   #offersModel = null;
+
   #tripInfoView = null;
 
   constructor({ container, pointsModel, destinationsModel, offersModel }) {
@@ -37,10 +39,10 @@ export default class TripInfoPresenter {
 
   #createPointsInfo(points) {
     const sortedPoints = sort[SortTypes.DAY](points);
-    const short = sortedPoints.length > 3;
+    const shortHeader = sortedPoints.length > 3;
     return {
-      short: short,
-      destinations: (short ? [sortedPoints[0], sortedPoints[sortedPoints.length - 1]] : sortedPoints)
+      short: shortHeader,
+      destinations: (shortHeader ? [sortedPoints[0], sortedPoints[sortedPoints.length - 1]] : sortedPoints)
         .map((point) => this.#destinationsModel.getById(point.destination).name),
       dateFrom: sortedPoints[0].dateFrom,
       dateTo: sortedPoints[sortedPoints.length - 1].dateTo,

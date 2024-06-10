@@ -1,19 +1,23 @@
 import { UpdateType, UserAction, PointMode } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { isEscapeButton } from '../utils';
-import { isBigDifference } from '../utils';
+import { isBigDifference } from '../utils/point';
 import PointEditView from '../view/point-edit-view';
 import PointView from '../view/point-view';
 
+
 export default class PointPresenter {
   #container = null;
+  #point = null;
+
   #destinationsModel = null;
   #offersModel = null;
+
   #handleDataChange = null;
   #handleModeChange = null;
-  #point = null;
+
   #pointDefaultView = null;
   #pointEditView = null;
+
   #mode = PointMode.DEFAULT;
 
   constructor({ container, destinationsModel, offersModel, onDataChange, onModeChange }) {
@@ -93,6 +97,12 @@ export default class PointPresenter {
   }
 
   setAborting() {
+    if (this.#mode === PointMode.DEFAULT) {
+      const unlockPoint = () => this.#pointDefaultView.unlock();
+      this.#pointDefaultView.shake(unlockPoint);
+      return;
+    }
+
     const resetFormState = () => {
       this.#pointEditView.updateElement({
         isDisabled: false,
@@ -100,10 +110,8 @@ export default class PointPresenter {
         isDeleting: false,
       });
     };
-
     this.#pointEditView.shake(resetFormState);
   }
-
 
   #replacePointToForm() {
     this.#mode = PointMode.EDIT;
@@ -145,7 +153,7 @@ export default class PointPresenter {
 
   #deleteClickHandler = (updatePoint) => {
     this.#handleDataChange(
-      UserAction.DELETE_POINT,
+      UserAction.REMOVE_POINT,
       UpdateType.MINOR,
       updatePoint
     );
@@ -157,7 +165,7 @@ export default class PointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (isEscapeButton(evt)) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#pointEditView.reset(this.#point);
       this.#replaceFormToPoint();
