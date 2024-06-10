@@ -9,7 +9,7 @@ import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic ebihib45i45ir5f4gg4b';
+const AUTHORIZATION = 'Basic kbwrhbjw4hjw34bhj34';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
