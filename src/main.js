@@ -1,66 +1,59 @@
-import TripPresenter from './presenter/trip-presenter.js';
-import PointsApiService from './points-api-service.js';
+import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
-import { RenderPosition, render } from './framework/render.js';
-import FilterPresenter from './presenter/filter-presenter.js';
-import DestinationsModel from './model/destinations-model.js';
-import FiltersModel from './model/filters-model.js';
-import NewPointView from './view/new-point-view.js';
 
-const AUTHORIZATION = 'Basic nbchrfbh6';
+import TripPresenter from './presenter/trip-presenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
+import FilterModel from './model/filters-model.js';
+import PointCreationStateModel from './model/point-creation-state-model.js';
+import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
+import TripApiService from './trip-api-service.js';
+
+const AUTHORIZATION = 'Basic gre43gt54';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
-const tripMainContainer = document.querySelector('.trip-main');
-const filterContainer = document.querySelector('.trip-controls__filters');
-const tripEventsContainer = document.querySelector('.trip-events');
+const tripApiService = new TripApiService(END_POINT, AUTHORIZATION);
 
-const apiService = new PointsApiService(END_POINT, AUTHORIZATION);
+const headerTripContainer = document.querySelector('.trip-main');
+const filterContainer = headerTripContainer.querySelector('.trip-controls__filters');
+const tripContainer = document.querySelector('.trip-events');
 
-const filtersModel = new FiltersModel();
-const destinationsModel = new DestinationsModel(apiService);
-const offersModel = new OffersModel(apiService);
-const pointsModel = new PointsModel({
-  apiService,
+const destinationsModel = new DestinationsModel(tripApiService);
+const offersModel = new OffersModel(tripApiService);
+const pointsModel = new PointsModel(tripApiService, destinationsModel, offersModel);
+
+const filterModel = new FilterModel();
+const pointCreationStateModel = new PointCreationStateModel();
+
+const tripInfoPresenter = new TripInfoPresenter({
+  container: headerTripContainer,
+  pointsModel,
   destinationsModel,
-  offersModel
+  offersModel,
 });
-
-const newPointComponent = new NewPointView({
-  onClick: handleNewEventButtonClick
+const filterPresenter = new FilterPresenter({
+  container: filterContainer,
+  filterModel,
+  pointsModel,
 });
-
-function handleNewEventClick() {
-  newPointComponent.element.disabled = true;
-}
-
+const newPointButtonPresenter = new NewPointButtonPresenter({
+  container: headerTripContainer,
+  pointsModel,
+  pointCreationStateModel,
+});
 const tripPresenter = new TripPresenter({
-  tripInfoContainer: tripMainContainer,
-  tripEventsContainer,
+  container: tripContainer,
   destinationsModel,
   offersModel,
   pointsModel,
-  filtersModel,
-  onNewPointDestroy: handleNewPointFormCancel,
-  onNewEventClick: handleNewEventClick,
+  filterModel,
+  pointCreationStateModel,
 });
 
-const filterPresenter = new FilterPresenter({
-  filterContainer: filterContainer,
-  filtersModel,
-  pointsModel
-});
-
-function handleNewPointFormCancel() {
-  newPointComponent.element.disabled = false;
-}
-
-function handleNewEventButtonClick() {
-  tripPresenter.createEvent();
-  handleNewEventClick();
-}
-
-render(newPointComponent, tripMainContainer, RenderPosition.BEFOREEND);
+tripInfoPresenter.init();
 filterPresenter.init();
+newPointButtonPresenter.init();
 tripPresenter.init();
+
 pointsModel.init();

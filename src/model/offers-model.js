@@ -1,14 +1,13 @@
 export default class OffersModel {
-  #apiService = null;
-  #offers = null;
+  #service = null;
+  #offers = [];
 
-  constructor(apiService) {
-    this.#apiService = apiService;
+  constructor(service) {
+    this.#service = service;
   }
 
   async init() {
-    this.#offers = await this.#apiService.offers;
-    return this.#offers;
+    this.#offers = await this.#service.offers;
   }
 
   get() {
@@ -16,6 +15,11 @@ export default class OffersModel {
   }
 
   getByType(type) {
-    return this.#offers.find((offer) => offer.type === type);
+    return this.#offers.find((offersList) => offersList.type === type).offers;
   }
+
+  getByTypeAndId(type, id) {
+    return this.getByType(type).find((offer) => offer.id === id);
+  }
+
 }

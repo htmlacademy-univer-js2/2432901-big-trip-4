@@ -1,16 +1,10 @@
-import { sortByDay, sortByPrice, sortByTime } from './event.js';
-import { SortType } from '../const.js';
+import { SortTypes } from '../const';
+import { sortByDay, sortByTime, sortByPrice } from './point';
 
 const sort = {
-  [SortType.DAY]: (events) => events.sort(sortByDay),
-  [SortType.PRICE]: (events) => events.sort(sortByPrice),
-  [SortType.TIME]: (events) => events.sort(sortByTime),
-  [SortType.EVENT]: () => {
-    throw new Error(`Sort by ${SortType.EVENT} is not implemented`);
-  },
-  [SortType.OFFER]: () => {
-    throw new Error(`Sort by ${SortType.OFFER} is not implemented`);
-  }
+  [SortTypes.DAY]: (points) => [...points].sort(sortByDay).reverse(),
+  [SortTypes.TIME]: (points) => [...points].sort(sortByTime),
+  [SortTypes.PRICE]: (points) => [...points].sort(sortByPrice)
 };
 
-export {sort};
+export { sort };

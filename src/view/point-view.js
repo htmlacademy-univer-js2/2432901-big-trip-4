@@ -1,43 +1,55 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { createPointTemplate } from '../templates/point-template.js';
-
+import { createPointViewTemplate } from '../templates/point-template.js';
 
 export default class PointView extends AbstractView {
-  #event = null;
-  #eventDestination = null;
-  #eventOffers = null;
-  #handleRollupClick = null;
+  #point = null;
+  #destination = null;
+  #offers = null;
+
+  #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({event, eventDestination, eventOffers, onRollupClick, onFavoriteClick}) {
-    super();
-    this.#event = event;
-    this.#eventDestination = eventDestination;
-    this.#eventOffers = eventOffers;
-    this.#handleRollupClick = onRollupClick;
-    this.#handleFavoriteClick = onFavoriteClick;
+  #rollupButton = null;
+  #favoriteButton = null;
 
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#rollupClickHandler);
-    this.element.querySelector('.event__favorite-btn')
-      .addEventListener('click', this.#favoriteClickHandler);
+  constructor({ point, pointDestination, pointOffers, onEditClick, onFavoriteClick }) {
+    super();
+    this.#point = point;
+    this.#destination = pointDestination;
+    this.#offers = pointOffers;
+    this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
+    this.#rollupButton = this.element.querySelector('.event__rollup-btn');
+    this.#rollupButton.addEventListener('click', this.#editClickHandler);
+    this.#favoriteButton = this.element.querySelector('.event__favorite-btn');
+    this.#favoriteButton.addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    return createPointTemplate({
-      event: this.#event,
-      eventDestination: this.#eventDestination,
-      eventOffers: this.#eventOffers
+    return createPointViewTemplate({
+      point: this.#point,
+      pointDestination: this.#destination,
+      pointOffers: this.#offers
     });
   }
 
-  #rollupClickHandler = (evt) => {
+  #editClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleRollupClick();
+    this.#handleEditClick();
   };
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleFavoriteClick();
   };
+
+  lock(){
+    this.#rollupButton.disabled = true;
+    this.#favoriteButton.disabled = true;
+  }
+
+  unlock() {
+    this.#rollupButton.disabled = false;
+    this.#favoriteButton.disabled = false;
+  }
 }

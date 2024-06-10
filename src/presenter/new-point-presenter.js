@@ -1,19 +1,18 @@
-import { remove, render, RenderPosition } from '../framework/render.js';
-import PointEditView from '../view/point-edit-view.js';
-import { EditingType, UpdateType, EditType } from '../const.js';
-import { isEscapeButton } from '../utils/common.js';
+import { UpdateType, UserAction } from '../const';
+import { remove, render, RenderPosition } from '../framework/render';
+import { isEscapeButton } from '../utils/common';
+import PointEditView from '../view/point-edit-view';
 
 export default class NewPointPresenter {
-  #eventListContainer = null;
+  #container = null;
   #destinationsModel = null;
   #offersModel = null;
+  #pointEditView = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
-  #pointEditComponent = null;
-
-  constructor({eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy}) {
-    this.#eventListContainer = eventListContainer;
+  constructor({ container, destinationsModel, offersModel, onDataChange, onDestroy }) {
+    this.#container = container;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onDataChange;
@@ -21,38 +20,36 @@ export default class NewPointPresenter {
   }
 
   init() {
-    if (this.#pointEditComponent !== null) {
+    if (this.#pointEditView !== null) {
       return;
     }
-
-    this.#pointEditComponent = new PointEditView({
-      eventDestination: this.#destinationsModel.get(),
-      eventOffers: this.#offersModel.get(),
-      onEditSubmit: this.#handleEditSubmit,
-      onEditReset: this.#handleResetClick,
-      eventType: EditType.CREATING
+    this.#pointEditView = new PointEditView({
+      destinations: this.#destinationsModel.get(),
+      offers: this.#offersModel.get(),
+      onFormSubmit: this.#formSubmitHandler,
+      onFormReset: this.#resetClickHandler,
+      isCreating: true
     });
-
-    render(this.#pointEditComponent, this.#eventListContainer.element, RenderPosition.AFTERBEGIN);
-
+    render(this.#pointEditView, this.#container, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  get initialized() {
+    return this.#pointEditView !== null;
+  }
+
   destroy() {
-    if (this.#pointEditComponent === null) {
+    if (this.#pointEditView === null) {
       return;
     }
-
-    this.#handleDestroy();
-
-    remove(this.#pointEditComponent);
-    this.#pointEditComponent = null;
-
+    remove(this.#pointEditView);
+    this.#pointEditView = null;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleDestroy();
   }
 
   setSaving() {
-    this.#pointEditComponent.updateElement({
+    this.#pointEditView.updateElement({
       isDisabled: true,
       isSaving: true,
     });
@@ -60,25 +57,24 @@ export default class NewPointPresenter {
 
   setAborting() {
     const resetFormState = () => {
-      this.#pointEditComponent.updateElement({
+      this.#pointEditView.updateElement({
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
       });
     };
-
-    this.#pointEditComponent.shake(resetFormState);
+    this.#pointEditView.shake(resetFormState);
   }
 
-  #handleEditSubmit = (event) => {
+  #formSubmitHandler = (point) => {
     this.#handleDataChange(
-      EditingType.ADD_POINT,
+      UserAction.ADD_POINT,
       UpdateType.MINOR,
-      event,
+      point,
     );
   };
 
-  #handleResetClick = () => {
+  #resetClickHandler = () => {
     this.destroy();
   };
 

@@ -1,23 +1,17 @@
-import Observable from '../framework/observable.js';
-import { updateItem } from '../utils/common.js';
-import { adaptToClient } from '../utils/adapt.js';
 import { UpdateType } from '../const.js';
+import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
-  #apiService = null;
+  #service = null;
+  #points = [];
   #destinationsModel = null;
   #offersModel = null;
-  #points = [];
 
-  constructor({apiService, destinationsModel, offersModel}) {
+  constructor(service, destinationsModel, offersModel) {
     super();
-    this.#apiService = apiService;
+    this.#service = service;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
-  }
-
-  get() {
-    return this.#points;
   }
 
   async init() {
@@ -26,45 +20,52 @@ export default class PointsModel extends Observable {
         this.#destinationsModel.init(),
         this.#offersModel.init()
       ]);
-      const events = await this.#apiService.events;
-      this.#points = events.map(adaptToClient);
-      this._notify(UpdateType.INIT, {isError: false});
-    } catch(err) {
+      this.#points = await this.#service.points;
+      this._notify(UpdateType.INIT, { isError: false });
+    } catch {
       this.#points = [];
-      this._notify(UpdateType.INIT, {isError: true});
+      this._notify(UpdateType.INIT, { isError: true });
     }
   }
 
-  async updateEvent(updateType, update) {
+  get() {
+    return this.#points;
+  }
+
+  getById(id) {
+    return this.#points.find((point) => point.id === id);
+  }
+
+  async add(updateType, point) {
     try {
-      const response = await this.#apiService.updateEvent(update);
-      const updatedEvent = adaptToClient(response);
-      this.#points = updateItem(this.#points, updatedEvent);
-      this._notify(updateType, updatedEvent);
-    } catch(err) {
-      throw new Error('Can\'t update event');
+      const newPoint = await this.#service.addPoint(point);
+      this.#points.push(newPoint);
+      this._notify(updateType, newPoint);
+    } catch {
+      throw Error('Can\'t add point');
     }
   }
 
-
-  async addEvent(updateType, update) {
+  async update(updateType, point) {
     try {
-      const response = await this.#apiService.addEvent(update);
-      const newEvent = adaptToClient(response);
-      this.#points.push(newEvent);
-      this._notify(updateType, newEvent);
-    } catch(err) {
-      throw new Error('Can\'t add event');
+      const updatedPoint = await this.#service.updatePoint(point);
+      const index = this.#points.findIndex((current) => current.id === point.id);
+      this.#points[index] = updatedPoint;
+      this._notify(updateType, updatedPoint);
+    } catch {
+      throw Error('Can\'t update point');
     }
+
   }
 
-  async remove(updateType, update) {
+  async remove(updateType, point) {
     try {
-      await this.#apiService.remove(update);
-      this.#points = this.#points.filter((eventItem) => eventItem.id !== update.id);
-      this._notify(updateType);
-    } catch(err) {
-      throw new Error('Can\'t delete event');
+      await this.#service.deletePoint(point);
+      const index = this.#points.findIndex((current) => current.id === point.id);
+      this.#points.splice(index, 1);
+      this._notify(updateType, point);
+    } catch {
+      throw Error('Can\'t remove point');
     }
   }
 }

@@ -1,3 +1,15 @@
+const POINT_TYPES = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant',
+];
+
 const DEFAULT_TYPE = 'flight';
 
 const EmptyPoint = {
@@ -10,20 +22,62 @@ const EmptyPoint = {
   type: DEFAULT_TYPE
 };
 
+
 const FilterType = {
   EVERYTHING: 'everything',
-  PAST: 'past',
-  PRESENT: 'present',
   FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
-const SortType = {
+const SortTypes = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
-  OFFER: 'offer',
+  OFFERS: 'offers'
 };
+
+const ENABLED_SORT_TYPES = [
+  SortTypes.DAY, SortTypes.TIME, SortTypes.PRICE
+];
+
+const UpdateType = {
+  INIT: 'init',
+  PATCH: 'patch',
+  MINOR: 'minor',
+  MAJOR: 'major',
+};
+
+const UserAction = {
+  ADD_POINT: 'add-point',
+  UPDATE_POINT: 'update-point',
+  DELETE_POINT: 'delete-point',
+};
+
+const Method = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE',
+};
+
+const Url = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const PointMode = {
+  DEFAULT: 'default',
+  EDIT: 'edit',
+};
+
 
 const TimePeriods = {
   MSEC_IN_SEC : 1000,
@@ -34,48 +88,4 @@ const TimePeriods = {
   MSEC_IN_DAY : 24 * 60 * 60 * 1000,
 };
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
-
-const EditingType = {
-  UPDATE_POINT: 'update-point',
-  ADD_POINT: 'add-point',
-  DELETE_POINT: 'delete-point'
-};
-
-const UpdateType = {
-  PATCH: 'PATCH',
-  MINOR: 'MINOR',
-  MAJOR: 'MAJOR',
-  INIT: 'INIT',
-};
-
-const EditType = {
-  EDITING: 'EDITING',
-  CREATING: 'CREATING'
-};
-
-const ButtonText = {
-  SAVE: 'Save',
-  DELETE: 'Delete',
-  CANCEL: 'Cancel',
-  LOAD_SAVE: 'Saving...',
-  LOAD_DELETE: 'Deleting...'
-};
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
-};
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
-
-export {
-  EmptyPoint, TimePeriods, FilterType, Mode, SortType, EditingType, UpdateType, EditType, ButtonText , Method, TimeLimit};
+export { POINT_TYPES, EmptyPoint, FilterType, SortTypes, ENABLED_SORT_TYPES, UpdateType, UserAction, Method, Url, TimeLimit, PointMode, TimePeriods };
