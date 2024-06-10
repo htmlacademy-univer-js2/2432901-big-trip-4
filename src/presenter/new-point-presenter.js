@@ -1,6 +1,6 @@
 import { UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework/render';
-import { isEscapeButton } from '../utils/common';
+import { isEscapeButton } from '../utils';
 import PointEditView from '../view/point-edit-view';
 
 export default class NewPointPresenter {

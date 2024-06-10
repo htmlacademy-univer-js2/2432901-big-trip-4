@@ -1,6 +1,6 @@
 import { SortTypes } from '../const';
 import { render, replace, remove, RenderPosition } from '../framework/render';
-import { sort } from '../utils/sort';
+import { sort } from '../utils';
 import TripInfoView from '../view/trip-info-view';
 
 export default class TripInfoPresenter {
